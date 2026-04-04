@@ -1,7 +1,6 @@
 let inventoryModel = require('../schemas/inventories');
 
 module.exports = {
-    // READ (All)
     GetAllInventories: async function () {
         return await inventoryModel.find({})
             .populate({
@@ -10,12 +9,10 @@ module.exports = {
             });
     },
 
-    // READ (One)
     GetInventoryByProductId: async function (productId) {
         return await inventoryModel.findOne({ product: productId }).populate('product');
     },
 
-    // UPDATE
     UpdateInventory: async function (productId, updateData) {
         return await inventoryModel.findOneAndUpdate({ product: productId }, updateData, { new: true });
     },

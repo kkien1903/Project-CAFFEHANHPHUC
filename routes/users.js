@@ -5,19 +5,27 @@ let userController = require('../controllers/users')
 let cartModel = require('../schemas/cart');
 let { checkLogin, checkRole } = require('../utils/authHandler.js')
 
+
+let userModel = require("../schemas/users");
 const { default: mongoose } = require("mongoose");
 //- Strong password
 
 router.get("/", checkLogin,
   checkRole("ADMIN", "MODERATOR"), async function (req, res, next) {
-    let users = await userController.GetAllUsers();
+    let users = await userModel
+      .find({ isDeleted: false })
+      .populate({
+        'path': 'role',
+        'select': "name"
+      })
     res.send(users);
   });
 
 router.get("/:id", checkLogin, async function (req, res, next) {
   try {
-    let result = await userController.FindUserById(req.params.id);
-    if (result) {
+    let result = await userModel
+      .find({ _id: req.params.id, isDeleted: false })
+    if (result.length > 0) {
       res.send(result);
     }
     else {
@@ -33,12 +41,13 @@ router.post("/",  postUserValidator, validateResult,
     let session = await mongoose.startSession()
     let transaction = session.startTransaction()
     try {
-      let newItem = await userController.CreateAnUser({
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        role: req.body.role
-      }, session)
+      let newItem = await userController.CreateAnUser(
+        req.body.username,
+        req.body.password,
+        req.body.email,
+        req.body.role,
+        session
+      )
       let newCart = new cartModel({
         user: newItem._id
       })
@@ -56,19 +65,31 @@ router.post("/",  postUserValidator, validateResult,
 
 router.put("/:id", async function (req, res, next) {
   try {
-    let updatedItem = await userController.UpdateUser(req.params.id, req.body);
-    if (!updatedItem) {
-      return res.status(404).send({ message: "id not found" });
+    let id = req.params.id;
+    let updatedItem = await userModel.findById(id);
+    for (const key of Object.keys(req.body)) {
+      updatedItem[key] = req.body[key];
     }
-    res.send(updatedItem);
+    await updatedItem.save();
+
+    if (!updatedItem) return res.status(404).send({ message: "id not found" });
+
+    let populated = await userModel
+      .findById(updatedItem._id)
+    res.send(populated);
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
 });
 
-router.delete("/:id", checkLogin, checkRole("ADMIN"), async function (req, res, next) {
+router.delete("/:id", async function (req, res, next) {
   try {
-    let updatedItem = await userController.DeleteUser(req.params.id);
+    let id = req.params.id;
+    let updatedItem = await userModel.findByIdAndUpdate(
+      id,
+      { isDeleted: true },
+      { new: true }
+    );
     if (!updatedItem) {
       return res.status(404).send({ message: "id not found" });
     }

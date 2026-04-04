@@ -25,20 +25,17 @@ module.exports = {
 
         return await newPayment.save();
     },
-
     GetPaymentById: async function (id) {
         return await paymentModel.findById(id)
             .populate('user', 'username')
             .populate('reservation');
     },
-
     GetAllPayments: async function () {
         return await paymentModel.find({})
             .populate('user', 'username')
             .populate('reservation', 'totalAmount status')
             .sort({ createdAt: -1 });
     },
-
     HandleSuccessfulPayment: async function (paymentId, transactionDetails) {
         const session = await mongoose.startSession();
         session.startTransaction();
@@ -77,7 +74,6 @@ module.exports = {
             throw error;
         }
     },
-
     HandleFailedPayment: async function (paymentId, transactionDetails) {
         const payment = await paymentModel.findById(paymentId);
         if (!payment) {

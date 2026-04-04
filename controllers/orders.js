@@ -7,13 +7,11 @@ module.exports = {
             .populate('user', 'username email')
             .populate('items.product', 'title price');
     },
-
     GetOrderById: async function (id) {
         return await orderModel.findOne({ _id: id, isDeleted: false })
             .populate('user')
             .populate('items.product');
     },
-
     CreateOrder: async function (orderData) {
         const { user, items, shippingAddress, paymentMethod } = orderData;
         if (!items || items.length === 0) {
@@ -50,7 +48,6 @@ module.exports = {
         });
         return await newOrder.save();
     },
-
     UpdateOrder: async function (id, updateData) {
         const { items, ...otherData } = updateData;
 
@@ -66,7 +63,6 @@ module.exports = {
 
         return await orderModel.findByIdAndUpdate(id, otherData, { new: true });
     },
-
     DeleteOrder: async function (id) {
         return await orderModel.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
     }

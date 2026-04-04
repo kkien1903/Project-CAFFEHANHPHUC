@@ -1,12 +1,15 @@
 var express = require('express');
 var router = express.Router();
 let reviewController = require('../controllers/reviews');
+let reviewModel = require('../schemas/reviews');
 let { checkLogin } = require('../utils/authHandler.js');
 
 /* GET reviews listing. */
 router.get('/', async function (req, res, next) {
   try {
-    let reviews = await reviewController.GetAllReviews();
+    let reviews = await reviewModel.find({ isDeleted: false })
+      .populate('product', 'title')
+      .populate('user', 'username');
     res.send(reviews);
   } catch (error) {
     res.status(500).send({ message: error.message });
@@ -15,14 +18,14 @@ router.get('/', async function (req, res, next) {
 
 router.get('/:id', async function (req, res, next) {
   try {
-    let result = await reviewController.GetReviewById(req.params.id);
-    if (result) {
+    let result = await reviewModel.find({ _id: req.params.id, isDeleted: false });
+    if (result.length > 0) {
       res.send(result);
     } else {
-      res.status(404).send({ message: "Review not found" });
+      res.status(404).send({ message: "id not found" });
     }
   } catch (error) {
-    res.status(400).send({ message: "Invalid Review ID" });
+    res.status(404).send({ message: "id not found" });
   }
 });
 
@@ -43,26 +46,35 @@ router.post('/', checkLogin, async function (req, res, next) {
 router.put('/:id', checkLogin, async function (req, res, next) {
   try {
     // Add logic to ensure only the user who wrote the review or an admin can update it
-    let updatedItem = await reviewController.UpdateReview(req.params.id, req.body);
-    if (!updatedItem) {
-      return res.status(404).send({ message: "Review not found" });
+    let id = req.params.id;
+    let updatedItem = await reviewModel.findById(id);
+    if (!updatedItem) return res.status(404).send({ message: "id not found" });
+
+    for (const key of Object.keys(req.body)) {
+      updatedItem[key] = req.body[key];
     }
+    await updatedItem.save();
+
     res.send(updatedItem);
   } catch (err) {
-    res.status(400).send({ message: "Invalid ID or update failed" });
+    res.status(400).send({ message: err.message });
   }
 });
 
 router.delete('/:id', async function (req, res, next) {
   try {
     // Add logic to ensure only admin can delete
-    let updatedItem = await reviewController.DeleteReview(req.params.id);
+    let updatedItem = await reviewModel.findByIdAndUpdate(
+      req.params.id,
+      { isDeleted: true },
+      { new: true }
+    );
     if (!updatedItem) {
-      return res.status(404).send({ message: "Review not found" });
+      return res.status(404).send({ message: "id not found" });
     }
     res.send(updatedItem);
   } catch (err) {
-    res.status(400).send({ message: "Invalid ID or delete failed" });
+    res.status(400).send({ message: err.message });
   }
 });
 module.exports = router;

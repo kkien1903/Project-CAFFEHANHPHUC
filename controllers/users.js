@@ -1,45 +1,21 @@
 let userModel = require('../schemas/users')
 let bcrypt = require('bcrypt')
 module.exports = {
-    // CREATE
-    CreateAnUser: async function (userData, session) {
-        // userData is an object with all user properties
+    CreateAnUser: async function (username, password, email, role, session,
+        avatarUrl, fullName, status, loginCount
+    ) {
         let newUser = new userModel({
-            username: userData.username,
-            password: userData.password,
-            email: userData.email,
-            role: userData.role,
-            avatarUrl: userData.avatarUrl,
-            fullName: userData.fullName,
-            status: userData.status,
-            loginCount: userData.loginCount
-        });
-        // Use session if it's provided for transactions
-        await newUser.save(session ? { session } : {});
+            username: username,
+            password: password,
+            email: email,
+            role: role,
+            avatarUrl: avatarUrl,
+            fullName: fullName,
+            status: status,
+            loginCount: loginCount
+        })
+        await newUser.save({session});
         return newUser;
-    },
-    // READ (All)
-    GetAllUsers: async function () {
-        return await userModel
-            .find({ isDeleted: false })
-            .populate({
-                'path': 'role',
-                'select': "name"
-            });
-    },
-    // UPDATE
-    UpdateUser: async function (id, userData) {
-        // Prevent password from being updated directly here. Password changes should have a separate flow.
-        const { password, ...updateData } = userData;
-        return await userModel.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
-    },
-    // DELETE (soft)
-    DeleteUser: async function (id) {
-        return await userModel.findByIdAndUpdate(
-            id,
-            { isDeleted: true },
-            { new: true }
-        );
     },
     QueryByUserNameAndPassword: async function (username, password) {
         let getUser = await userModel.findOne({ username: username });
@@ -52,7 +28,6 @@ module.exports = {
         return false;
 
     },
-    // READ (by ID)
     FindUserById: async function (id) {
         return await userModel.findOne({
             _id: id,

@@ -1,10 +1,15 @@
 var express = require('express');
 var router = express.Router();
 let inventoryController = require('../controllers/inventories');
+let inventoryModel = require('../schemas/inventories');
 
 router.get('/', async function (req, res, next) {
     try {
-        let inventories = await inventoryController.GetAllInventories();
+        let inventories = await inventoryModel.find({})
+            .populate({
+                path: 'product',
+                select: 'title price'
+            });
         res.send(inventories);
     } catch (error) {
         res.status(500).send({ message: error.message });
@@ -13,14 +18,15 @@ router.get('/', async function (req, res, next) {
 
 router.get('/:productId', async function (req, res, next) {
     try {
-        const inventory = await inventoryController.GetInventoryByProductId(req.params.productId);
-        if (inventory) {
-            res.send(inventory);
+        // Using find to be consistent with users.js which returns an array
+        const inventories = await inventoryModel.find({ product: req.params.productId }).populate('product');
+        if (inventories.length > 0) {
+            res.send(inventories);
         } else {
-            res.status(404).send({ message: "Không tìm thấy kho cho sản phẩm này" });
+            res.status(404).send({ message: "id not found" });
         }
     } catch (error) {
-        res.status(500).send({ message: error.message });
+        res.status(404).send({ message: "id not found" });
     }
 })
 router.post('/increase-stock', async function (req, res, next) {

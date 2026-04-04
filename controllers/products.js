@@ -29,11 +29,9 @@ module.exports = {
             .limit(parseInt(limit))
             .skip((parseInt(page) - 1) * parseInt(limit));
     },
-
     GetProductById: async function (id) {
         return await productModel.findOne({ _id: id, isDeleted: false }).populate('category');
     },
-
     CreateProduct: async function (productData, stock, session) {
         const productToSave = {
             ...productData,
@@ -55,7 +53,6 @@ module.exports = {
 
         return savedProduct;
     },
-
     UpdateProduct: async function (id, productData) {
         if (productData.title) {
             productData.slug = slugify(productData.title, {
@@ -66,7 +63,6 @@ module.exports = {
         }
         return await productModel.findByIdAndUpdate(id, productData, { new: true, runValidators: true });
     },
-
     DeleteProduct: async function (id) {
         // Soft delete
         return await productModel.findByIdAndUpdate(id, { isDeleted: true }, { new: true });

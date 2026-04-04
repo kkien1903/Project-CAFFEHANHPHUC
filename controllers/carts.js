@@ -8,7 +8,6 @@ module.exports = {
         }
         return []; // Return empty array if no cart
     },
-
     AddItemToCart: async function (userId, product, quantity) {
         let currentCart = await cartModel.findOne({ user: userId });
 
@@ -28,7 +27,6 @@ module.exports = {
         await currentCart.save();
         return await currentCart.populate('items.product');
     },
-
     DecreaseItemInCart: async function (userId, product, quantity) {
         let currentCart = await cartModel.findOne({ user: userId });
 
@@ -51,7 +49,6 @@ module.exports = {
         await currentCart.save();
         return await currentCart.populate('items.product');
     },
-
     RemoveItemFromCart: async function (userId, productId) {
         let currentCart = await cartModel.findOne({ user: userId });
         if (!currentCart) {
@@ -64,7 +61,6 @@ module.exports = {
         await currentCart.save();
         return await currentCart.populate('items.product');
     },
-
     ClearCart: async function (userId) {
         let currentCart = await cartModel.findOne({ user: userId });
         if (!currentCart) {

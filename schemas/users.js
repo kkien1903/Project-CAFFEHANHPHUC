@@ -51,9 +51,9 @@ const userSchema = new mongoose.Schema(
         isDeleted: {
             type: Boolean,
             default: false
-        }, // Added comma here
-        forgotPasswordToken: String, // Changed to camelCase
-        forgotPasswordTokenExp: Date // Changed to camelCase
+        },
+        forgotpasswordToken: String,
+        forgotpasswordTokenExp: Date
     },
     {
         timestamps: true

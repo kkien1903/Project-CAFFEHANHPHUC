@@ -37,32 +37,26 @@ module.exports = {
 
         return await newReservation.save();
     },
-
     GetReservationById: async function (id) {
         return await reservationModel.findOne({ _id: id, isDeleted: false })
             .populate('user', 'username email')
             .populate('items.product', 'title images');
     },
-
     GetAllUserReservations: async function (userId) {
         return await reservationModel.find({ user: userId, isDeleted: false })
             .populate('items.product', 'title images')
             .sort({ createdAt: -1 });
     },
 
-    // READ (All, for Admin)
     GetAllReservations: async function () {
         return await reservationModel.find({ isDeleted: false })
             .populate('user', 'username email')
             .populate('items.product', 'title')
             .sort({ createdAt: -1 });
     },
-
     UpdateReservationStatus: async function (id, status) {
         return await reservationModel.findByIdAndUpdate(id, { status: status }, { new: true });
     },
-
-    // Soft delete a reservation
     CancelReservation: async function (id) {
         return await reservationModel.findByIdAndUpdate(id, { status: 'cancelled' }, { new: true });
     }
