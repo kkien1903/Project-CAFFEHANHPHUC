@@ -23,7 +23,7 @@ module.exports = {
             inventoryItem.stock += quantity;
             return await inventoryItem.save();
         }
-        return null; // Or throw an error
+        throw new Error(`Không tìm thấy kho hàng cho sản phẩm ID: ${productId}`);
     },
 
     DecreaseStock: async function (productId, quantity) {
@@ -31,11 +31,12 @@ module.exports = {
         if (inventoryItem) {
             if (inventoryItem.stock >= quantity) {
                 inventoryItem.stock -= quantity;
+                inventoryItem.soldCount += quantity; // Tăng số lượng đã bán
                 return await inventoryItem.save();
             } else {
-                throw new Error("Sản phẩm không đủ số lượng");
+                throw new Error("Sản phẩm không đủ số lượng trong kho.");
             }
         }
-        return null; // Or throw an error
+        throw new Error(`Không tìm thấy kho hàng cho sản phẩm ID: ${productId}`);
     }
 };
