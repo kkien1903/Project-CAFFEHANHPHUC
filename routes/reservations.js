@@ -27,6 +27,17 @@ router.get('/', checkLogin, async function (req, res, next) {
     }
 });
 
+// Get all reservations (Admin only)
+router.get('/all', checkLogin, checkRole('ADMIN'), async function (req, res, next) {
+    try {
+        const reservations = await reservationController.GetAllReservations();
+        res.send(reservations);
+    } catch (error) {
+        res.status(500).send({ message: "Lỗi khi lấy tất cả reservation: " + error.message });
+    }
+});
+
+
 // Get a specific reservation by ID
 router.get('/:id', checkLogin, async function (req, res, next) {
     try {

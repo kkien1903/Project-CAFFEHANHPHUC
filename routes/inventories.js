@@ -10,6 +10,19 @@ router.get('/', async function (req, res, next) {
         res.status(500).send({ message: error.message });
     }
 })
+
+router.get('/:productId', async function (req, res, next) {
+    try {
+        const inventory = await inventoryController.GetInventoryByProductId(req.params.productId);
+        if (inventory) {
+            res.send(inventory);
+        } else {
+            res.status(404).send({ message: "Không tìm thấy kho cho sản phẩm này" });
+        }
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
+})
 router.post('/increase-stock', async function (req, res, next) {
     try {
         const { product, quantity } = req.body;

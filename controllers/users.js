@@ -1,6 +1,7 @@
 let userModel = require('../schemas/users')
 let bcrypt = require('bcrypt')
 module.exports = {
+    // CREATE
     CreateAnUser: async function (userData, session) {
         // userData is an object with all user properties
         let newUser = new userModel({
@@ -17,6 +18,29 @@ module.exports = {
         await newUser.save(session ? { session } : {});
         return newUser;
     },
+    // READ (All)
+    GetAllUsers: async function () {
+        return await userModel
+            .find({ isDeleted: false })
+            .populate({
+                'path': 'role',
+                'select': "name"
+            });
+    },
+    // UPDATE
+    UpdateUser: async function (id, userData) {
+        // Prevent password from being updated directly here. Password changes should have a separate flow.
+        const { password, ...updateData } = userData;
+        return await userModel.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
+    },
+    // DELETE (soft)
+    DeleteUser: async function (id) {
+        return await userModel.findByIdAndUpdate(
+            id,
+            { isDeleted: true },
+            { new: true }
+        );
+    },
     QueryByUserNameAndPassword: async function (username, password) {
         let getUser = await userModel.findOne({ username: username });
         if (!getUser) {
@@ -28,6 +52,7 @@ module.exports = {
         return false;
 
     },
+    // READ (by ID)
     FindUserById: async function (id) {
         return await userModel.findOne({
             _id: id,

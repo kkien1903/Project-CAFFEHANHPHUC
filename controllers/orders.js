@@ -1,4 +1,5 @@
 let orderModel = require('../schemas/orders');
+const productModel = require('../schemas/products');
 
 module.exports = {
     GetAllOrders: async function () {
@@ -15,19 +16,34 @@ module.exports = {
 
     CreateOrder: async function (orderData) {
         const { user, items, shippingAddress, paymentMethod } = orderData;
+        if (!items || items.length === 0) {
+            throw new Error("Đơn hàng phải có ít nhất một sản phẩm.");
+        }
 
-        // It's better to fetch product prices from DB to ensure accuracy
-        // For now, we trust the input `item.price`
+        // Fetch product prices from DB to ensure accuracy
+        const productIds = items.map(item => item.product);
+        const products = await productModel.find({ '_id': { $in: productIds } });
+        const productPriceMap = new Map(products.map(p => [p._id.toString(), p.price]));
+
         let totalAmount = 0;
-        if (items && items.length > 0) {
-            items.forEach(item => {
-                totalAmount += item.quantity * item.price;
+        const processedItems = [];
+
+        for (const item of items) {
+            const price = productPriceMap.get(item.product.toString());
+            if (price === undefined) {
+                throw new Error(`Sản phẩm với ID ${item.product} không tồn tại hoặc không có giá.`);
+            }
+            processedItems.push({
+                product: item.product,
+                quantity: item.quantity,
+                price: price // Use price from DB
             });
+            totalAmount += item.quantity * price;
         }
 
         const newOrder = new orderModel({
             user,
-            items,
+            items: processedItems,
             totalAmount,
             shippingAddress,
             paymentMethod

@@ -32,4 +32,25 @@ router.post('/decrease-items', checkLogin, async function (req, res, next) {
     }
 });
 
+router.post('/remove-item', checkLogin, async function (req, res, next) {
+    try {
+        const { product } = req.body; // just need product ID
+        if (!product) return res.status(400).send({ message: "Product ID is required." });
+
+        const updatedCart = await cartController.RemoveItemFromCart(req.userId, product);
+        res.send(updatedCart);
+    } catch (error) {
+        res.status(500).send({ message: "Lỗi khi xóa sản phẩm: " + error.message });
+    }
+});
+
+router.post('/clear', checkLogin, async function (req, res, next) {
+    try {
+        const updatedCart = await cartController.ClearCart(req.userId);
+        res.send(updatedCart);
+    } catch (error) {
+        res.status(500).send({ message: "Lỗi khi làm rỗng giỏ hàng: " + error.message });
+    }
+});
+
 module.exports = router;

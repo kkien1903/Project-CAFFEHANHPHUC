@@ -50,5 +50,28 @@ module.exports = {
 
         await currentCart.save();
         return await currentCart.populate('items.product');
+    },
+
+    RemoveItemFromCart: async function (userId, productId) {
+        let currentCart = await cartModel.findOne({ user: userId });
+        if (!currentCart) {
+            return null;
+        }
+        const index = currentCart.items.findIndex(e => e.product.equals(productId));
+        if (index > -1) {
+            currentCart.items.splice(index, 1);
+        }
+        await currentCart.save();
+        return await currentCart.populate('items.product');
+    },
+
+    ClearCart: async function (userId) {
+        let currentCart = await cartModel.findOne({ user: userId });
+        if (!currentCart) {
+            return null;
+        }
+        currentCart.items = [];
+        await currentCart.save();
+        return currentCart;
     }
 };

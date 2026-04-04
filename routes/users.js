@@ -5,27 +5,19 @@ let userController = require('../controllers/users')
 let cartModel = require('../schemas/cart');
 let { checkLogin, checkRole } = require('../utils/authHandler.js')
 
-
-let userModel = require("../schemas/users");
 const { default: mongoose } = require("mongoose");
 //- Strong password
 
 router.get("/", checkLogin,
   checkRole("ADMIN", "MODERATOR"), async function (req, res, next) {
-    let users = await userModel
-      .find({ isDeleted: false })
-      .populate({
-        'path': 'role',
-        'select': "name"
-      })
+    let users = await userController.GetAllUsers();
     res.send(users);
   });
 
 router.get("/:id", checkLogin, async function (req, res, next) {
   try {
-    let result = await userModel
-      .find({ _id: req.params.id, isDeleted: false })
-    if (result.length > 0) {
+    let result = await userController.FindUserById(req.params.id);
+    if (result) {
       res.send(result);
     }
     else {
@@ -64,32 +56,19 @@ router.post("/",  postUserValidator, validateResult,
 
 router.put("/:id", async function (req, res, next) {
   try {
-    let id = req.params.id;
-    let updatedItem = await userModel.findByIdAndUpdate(
-      id,
-      req.body,
-      { new: true, runValidators: true } // Return the updated document and run validators
-    );
-
+    let updatedItem = await userController.UpdateUser(req.params.id, req.body);
     if (!updatedItem) {
       return res.status(404).send({ message: "id not found" });
     }
-    // If you need to populate fields after update, you can do it here:
-    // let populated = await userModel.findById(updatedItem._id).populate('role');
     res.send(updatedItem);
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
 });
 
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", checkLogin, checkRole("ADMIN"), async function (req, res, next) {
   try {
-    let id = req.params.id;
-    let updatedItem = await userModel.findByIdAndUpdate(
-      id,
-      { isDeleted: true },
-      { new: true }
-    );
+    let updatedItem = await userController.DeleteUser(req.params.id);
     if (!updatedItem) {
       return res.status(404).send({ message: "id not found" });
     }

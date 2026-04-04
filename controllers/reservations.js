@@ -50,6 +50,14 @@ module.exports = {
             .sort({ createdAt: -1 });
     },
 
+    // READ (All, for Admin)
+    GetAllReservations: async function () {
+        return await reservationModel.find({ isDeleted: false })
+            .populate('user', 'username email')
+            .populate('items.product', 'title')
+            .sort({ createdAt: -1 });
+    },
+
     UpdateReservationStatus: async function (id, status) {
         return await reservationModel.findByIdAndUpdate(id, { status: status }, { new: true });
     },
