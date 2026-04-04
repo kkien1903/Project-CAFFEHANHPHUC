@@ -4,35 +4,29 @@ let { postUserValidator, validateResult } = require('../utils/validatorHandler')
 let userController = require('../controllers/users')
 let cartModel = require('../schemas/cart');
 let { checkLogin, checkRole } = require('../utils/authHandler.js')
-
-
-let userModel = require("../schemas/users");
 const { default: mongoose } = require("mongoose");
 //- Strong password
 
 router.get("/", checkLogin,
   checkRole("ADMIN", "MODERATOR"), async function (req, res, next) {
-    let users = await userModel
-      .find({ isDeleted: false })
-      .populate({
-        'path': 'role',
-        'select': "name"
-      })
-    res.send(users);
+    try {
+      const users = await userController.GetAllUsers();
+      res.send(users);
+    } catch (error) {
+      next(error);
+    }
   });
 
 router.get("/:id", checkLogin, async function (req, res, next) {
   try {
-    let result = await userModel
-      .find({ _id: req.params.id, isDeleted: false })
-    if (result.length > 0) {
+    const result = await userController.FindUserById(req.params.id);
+    if (result) {
       res.send(result);
-    }
-    else {
+    } else {
       res.status(404).send({ message: "id not found" });
     }
   } catch (error) {
-    res.status(404).send({ message: "id not found" });
+    next(error);
   }
 });
 
@@ -41,13 +35,12 @@ router.post("/",  postUserValidator, validateResult,
     let session = await mongoose.startSession()
     let transaction = session.startTransaction()
     try {
-      let newItem = await userController.CreateAnUser(
-        req.body.username,
-        req.body.password,
-        req.body.email,
-        req.body.role,
-        session
-      )
+      let newItem = await userController.CreateAnUser({
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        role: req.body.role
+      }, session)
       let newCart = new cartModel({
         user: newItem._id
       })
@@ -63,39 +56,43 @@ router.post("/",  postUserValidator, validateResult,
     }
   });
 
-router.put("/:id", async function (req, res, next) {
+router.put("/:id", checkLogin, async function (req, res, next) {
   try {
-    let id = req.params.id;
-    let updatedItem = await userModel.findById(id);
-    for (const key of Object.keys(req.body)) {
-      updatedItem[key] = req.body[key];
+    const userIdToUpdate = req.params.id;
+    const loggedInUserId = req.userId;
+
+    const loggedInUser = await userController.FindUserById(loggedInUserId);
+    if (!loggedInUser) {
+      return res.status(401).send({ message: "Người dùng không hợp lệ." });
     }
-    await updatedItem.save();
+    const loggedInUserRole = loggedInUser.role.name.toUpperCase();
 
-    if (!updatedItem) return res.status(404).send({ message: "id not found" });
+    if (loggedInUserId !== userIdToUpdate && loggedInUserRole !== 'ADMIN') {
+      return res.status(403).send({ message: "Bạn không có quyền cập nhật người dùng này." });
+    }
 
-    let populated = await userModel
-      .findById(updatedItem._id)
-    res.send(populated);
+    // Only admins can change roles
+    if (loggedInUserRole !== 'ADMIN' && req.body.role) {
+      delete req.body.role;
+    }
+
+    const updatedUser = await userController.UpdateUser(userIdToUpdate, req.body);
+
+    if (!updatedUser) return res.status(404).send({ message: "id not found" });
+
+    res.send(await updatedUser.populate('role'));
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    next(err);
   }
 });
 
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", checkLogin, checkRole("ADMIN"), async function (req, res, next) {
   try {
-    let id = req.params.id;
-    let updatedItem = await userModel.findByIdAndUpdate(
-      id,
-      { isDeleted: true },
-      { new: true }
-    );
-    if (!updatedItem) {
-      return res.status(404).send({ message: "id not found" });
-    }
-    res.send(updatedItem);
+    const deletedUser = await userController.DeleteUser(req.params.id);
+    if (!deletedUser) return res.status(404).send({ message: "id not found" });
+    res.send(deletedUser);
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    next(err);
   }
 });
 

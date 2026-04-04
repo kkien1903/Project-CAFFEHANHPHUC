@@ -1,18 +1,17 @@
 let userModel = require('../schemas/users')
 let bcrypt = require('bcrypt')
 module.exports = {
-    CreateAnUser: async function (username, password, email, role, session,
-        avatarUrl, fullName, status, loginCount
-    ) {
+    CreateAnUser: async function (userData, session) {
+        const { username, password, email, role, avatarUrl, fullName, status, loginCount } = userData;
         let newUser = new userModel({
             username: username,
             password: password,
             email: email,
             role: role,
-            avatarUrl: avatarUrl,
-            fullName: fullName,
-            status: status,
-            loginCount: loginCount
+            avatarUrl,
+            fullName,
+            status,
+            loginCount
         })
         await newUser.save({session});
         return newUser;
@@ -49,5 +48,25 @@ module.exports = {
             return false
         }
         return user
+    },
+    GetAllUsers: async function () {
+        return await userModel
+            .find({ isDeleted: false })
+            .populate({
+                'path': 'role',
+                'select': "name"
+            });
+    },
+    UpdateUser: async function (id, updateData) {
+        const user = await userModel.findById(id);
+        if (!user || user.isDeleted) {
+            return null;
+        }
+        Object.assign(user, updateData);
+        await user.save();
+        return user;
+    },
+    DeleteUser: async function (id) {
+        return await userModel.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
     }
 }

@@ -65,11 +65,15 @@ userSchema.index({
     email: 1
 })
 
-userSchema.pre('save', function (next) {
-    let salt = bcrypt.genSaltSync(10);
-    this.password = bcrypt.hashSync(
+userSchema.pre('save', async function () {
+    // Chỉ mã hóa mật khẩu nếu nó được thay đổi (hoặc là người dùng mới)
+    if (!this.isModified('password')) {
+        return;
+    }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(
         this.password, salt
-    )
+    );
 })
 
 module.exports = mongoose.model("user", userSchema);
