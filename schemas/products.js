@@ -52,7 +52,7 @@ let productSchema = mongoose.Schema({
     },
     images: {
         type: [String],
-        default: 'https://niteair.co.uk/wp-content/uploads/2023/08/default-product-image.png'
+        default: ['https://niteair.co.uk/wp-content/uploads/2023/08/default-product-image.png']
     },
     isDeleted: {
         type: Boolean,

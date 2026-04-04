@@ -1,51 +1,40 @@
 var express = require('express');
 var router = express.Router();
-let inventoryModel = require('../schemas/inventories')
+let inventoryController = require('../controllers/inventories');
 
 router.get('/', async function (req, res, next) {
-    let inventories = await inventoryModel.find({
-    }).populate({
-        path: 'product',
-        select: 'title price'
-    })
-    res.send(inventories)
+    try {
+        let inventories = await inventoryController.GetAllInventories();
+        res.send(inventories);
+    } catch (error) {
+        res.status(500).send({ message: error.message });
+    }
 })
 router.post('/increase-stock', async function (req, res, next) {
-    let { product, quantity } = req.body;
-    let getProduct = await inventoryModel.findOne({
-        product: product
-    })
-    console.log(getProduct);
-    if (getProduct) {
-        getProduct.stock += quantity;
-        await getProduct.save()
-        res.send(getProduct)
-    } else {
-        res.status(404).send({
-            message: "Product not found"
-        })
+    try {
+        const { product, quantity } = req.body;
+        const updatedInventory = await inventoryController.IncreaseStock(product, quantity);
+        if (updatedInventory) {
+            res.send(updatedInventory);
+        } else {
+            res.status(404).send({ message: "Product not found in inventory" });
+        }
+    } catch (error) {
+        res.status(500).send({ message: error.message });
     }
 
 })
 router.post('/decrease-stock', async function (req, res, next) {
-    let { product, quantity } = req.body;
-    let getProduct = await inventoryModel.findOne({
-        product: product
-    })
-    if (getProduct) {
-        if (getProduct.stock >= quantity) {
-            getProduct.stock -= quantity;
-            await getProduct.save()
-            res.send(getProduct)
+    try {
+        const { product, quantity } = req.body;
+        const updatedInventory = await inventoryController.DecreaseStock(product, quantity);
+        if (updatedInventory) {
+            res.send(updatedInventory);
         } else {
-            res.status(404).send({
-                message: "Product khong du so luong"
-            })
+            res.status(404).send({ message: "Product not found in inventory" });
         }
-    } else {
-        res.status(404).send({
-            message: "Product not found"
-        })
+    } catch (error) {
+        res.status(400).send({ message: error.message });
     }
 
 })

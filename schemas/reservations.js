@@ -26,7 +26,7 @@ let reservationSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'user',
         // unique: true, // Removed unique constraint if a user can have multiple reservations
-        require: true
+        required: true
     },
     items: {
         type: [ItemOfReservation],
@@ -43,6 +43,10 @@ let reservationSchema = mongoose.Schema({
     },
     expiredAt: { // Changed to camelCase
         type: Date
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     }
 }, {
     timestamps: true

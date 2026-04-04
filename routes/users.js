@@ -41,13 +41,12 @@ router.post("/",  postUserValidator, validateResult,
     let session = await mongoose.startSession()
     let transaction = session.startTransaction()
     try {
-      let newItem = await userController.CreateAnUser(
-        req.body.username,
-        req.body.password,
-        req.body.email,
-        req.body.role,
-        session
-      )
+      let newItem = await userController.CreateAnUser({
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        role: req.body.role
+      }, session)
       let newCart = new cartModel({
         user: newItem._id
       })

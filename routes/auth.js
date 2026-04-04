@@ -7,19 +7,33 @@ let { checkLogin } = require('../utils/authHandler.js')
 let { changePasswordValidator, validateResult, resetPasswordValidator } = require('../utils/validatorHandler')
 let crypto = require('crypto')
 let mailHandler = require('../utils/sendMailHandler')
+let cartModel = require('../schemas/cart');
+const mongoose = require('mongoose');
 
 /* GET home page. */
 //localhost:3000
 router.post('/register', async function (req, res, next) {
-    let newUser = await userController.CreateAnUser(
-        req.body.username,
-        req.body.password,
-        req.body.email,
-        "69a5462f086d74c9e772b804"
-    )
-    res.send({
-        message: "dang ki thanh cong"
-    })
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        let newUser = await userController.CreateAnUser({
+            username: req.body.username,
+            password: req.body.password,
+            email: req.body.email,
+            role: "69a5462f086d74c9e772b804" // Default user role
+        }, session);
+
+        // Create a cart for the new user
+        await new cartModel({ user: newUser._id }).save({ session });
+
+        await session.commitTransaction();
+        res.send({ message: "Đăng kí thành công" });
+    } catch (error) {
+        await session.abortTransaction();
+        res.status(400).send({ message: "Đăng kí thất bại: " + error.message });
+    } finally {
+        session.endSession();
+    }
 });
 router.post('/login', async function (req, res, next) {
     let result = await userController.QueryByUserNameAndPassword(
@@ -78,7 +92,7 @@ router.post('/forgotpassword', async function (req, res, next) {
     user.forgotPasswordToken = crypto.randomBytes(21).toString('hex'); // Changed to camelCase
     user.forgotPasswordTokenExp = new Date(Date.now() + 10 * 60 * 1000); // Changed to camelCase
     await user.save();
-    let URL = 'http://localhost:3000/api/v1/auth/resetpassword/'+ user.forgotpasswordToken;
+    let URL = 'http://localhost:3000/api/v1/auth/resetpassword/'+ user.forgotPasswordToken; // Sử dụng tên trường mới
     mailHandler.sendMail(user.email,URL);
     res.send("check mail")
 })
@@ -91,8 +105,8 @@ router.post('/resetpassword/:token',resetPasswordValidator,validateResult, async
         return;
     }
     user.password = password;
-    user.forgotpasswordToken = null;
-    user.forgotpasswordTokenExp = null;
+    user.forgotPasswordToken = null; // Sử dụng tên trường mới
+    user.forgotPasswordTokenExp = null; // Sử dụng tên trường mới
     await user.save()
     res.send("update password thanh cong")
 

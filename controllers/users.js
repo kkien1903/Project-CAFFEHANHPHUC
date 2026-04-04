@@ -1,20 +1,20 @@
 let userModel = require('../schemas/users')
 let bcrypt = require('bcrypt')
 module.exports = {
-    CreateAnUser: async function (username, password, email, role, session,
-        avatarUrl, fullName, status, loginCount
-    ) {
+    CreateAnUser: async function (userData, session) {
+        // userData is an object with all user properties
         let newUser = new userModel({
-            username: username,
-            password: password,
-            email: email,
-            role: role,
-            avatarUrl: avatarUrl,
-            fullName: fullName,
-            status: status,
-            loginCount: loginCount
-        })
-        await newUser.save({session});
+            username: userData.username,
+            password: userData.password,
+            email: userData.email,
+            role: userData.role,
+            avatarUrl: userData.avatarUrl,
+            fullName: userData.fullName,
+            status: userData.status,
+            loginCount: userData.loginCount
+        });
+        // Use session if it's provided for transactions
+        await newUser.save(session ? { session } : {});
         return newUser;
     },
     QueryByUserNameAndPassword: async function (username, password) {
@@ -29,11 +29,6 @@ module.exports = {
 
     },
     FindUserById: async function (id) {
-        return await userModel.findOne({
-            _id: id,
-            isDeleted: false
-        }).populate('role')
-    }, FindUserById: async function (id) {
         return await userModel.findOne({
             _id: id,
             isDeleted: false
