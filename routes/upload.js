@@ -66,8 +66,6 @@ router.post('/excel', uploadExcel.single('file'), async function (req, res, next
             let start = 2 + batchsize * timeCommit;
             let end = Math.min(start + batchsize - 1, worksheet.rowCount);
             let validProduct = []
-            let session = await mongoose.startSession()
-            session.startTransaction()
             try {
                 let mapProductToStock = new Map()
                 for (let index = start; index <= end; index++) {
@@ -78,12 +76,11 @@ router.post('/excel', uploadExcel.single('file'), async function (req, res, next
                     let categoryName = row.getCell(3).value; // Category name from Excel
                     let price = Number.parseInt(row.getCell(4).value);
                     let stock = Number.parseInt(row.getCell(5).value);
-                    let beanType = row.getCell(6).value || 'Blend'; // New field
-                    let roastLevel = row.getCell(7).value || 'Medium'; // New field
-                    let origin = row.getCell(8).value || ''; // New field
-                    let sizeOptions = row.getCell(9).value ? String(row.getCell(9).value).split(',').map(s => s.trim()) : []; // New field
-                    let isAvailable = row.getCell(10).value === 'TRUE'; // New field
-
+                    let origin = row.getCell(6).value || '';
+                    let sizeOptions = row.getCell(7).value ? String(row.getCell(7).value).split(',').map(s => s.trim()) : [];
+                    let isAvailable = row.getCell(8).value === 'TRUE' || row.getCell(8).value === true;
+                    let ingredients = row.getCell(9).value ? String(row.getCell(9).value).split(',').map(s => s.trim()) : [];
+                    
                     if (price < 0 || isNaN(price)) {
                         errorRow.push(`Dinh dang price chua dung: ${price}`);
                     }
@@ -123,29 +120,24 @@ router.post('/excel', uploadExcel.single('file'), async function (req, res, next
                             price: price,
                             description: title, // Assuming description is title for now
                             category: categoryId, // Use the found category ObjectId
-                            beanType: beanType,
-                            roastLevel: roastLevel,
                             origin: origin,
                             sizeOptions: sizeOptions,
-                            isAvailable: isAvailable
+                            isAvailable: isAvailable,
+                            ingredients: ingredients
                         })
                         mapProductToStock.set(sku, stock);
                         validProduct.push(newObj)
                     }
                 }
-                listProduct = await productModel.insertMany(validProduct, { session })
+                listProduct = await productModel.insertMany(validProduct)
                 let validInventory = listProduct.map(function (e) {
                     return {
                         product: e._id,
                         stock: mapProductToStock.get(e.sku)
                     }
                 })
-                await InventoryModel.insertMany(validInventory, { session })
-                await session.commitTransaction();
-                await session.endSession()
+                await InventoryModel.insertMany(validInventory)
             } catch (error) {
-                await session.abortTransaction();
-                await session.endSession()
                 errors.push({ row: `Batch starting at ${start}`, messages: [`Loi trong transaction: ${error.message}`] });
             }
 

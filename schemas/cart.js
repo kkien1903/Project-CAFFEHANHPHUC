@@ -8,6 +8,10 @@ let itemCartSchema = mongoose.Schema({
         type: Number,
         min: 1,
         default: 1
+    },
+    size: {
+        type: String,
+        required: true
     }
 }, {
     _id: false
@@ -17,7 +21,7 @@ let cartSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'user',
         unique: true,
-        require: true
+        required: true
     },
     items: {
         type: [itemCartSchema],

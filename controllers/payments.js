@@ -37,17 +37,13 @@ module.exports = {
             .sort({ createdAt: -1 });
     },
     HandleSuccessfulPayment: async function (paymentId, transactionDetails) {
-        const session = await mongoose.startSession();
-        session.startTransaction();
         try {
-            const payment = await paymentModel.findById(paymentId).session(session);
+            const payment = await paymentModel.findById(paymentId);
             if (!payment) {
                 throw new Error("Payment không tồn tại.");
             }
             if (payment.status === 'paid') {
                 // Already processed
-                await session.abortTransaction();
-                session.endSession();
                 return payment;
             }
 
@@ -56,21 +52,16 @@ module.exports = {
             payment.paidAt = new Date();
             payment.transactionId = transactionDetails.id; // Example field
             payment.providerResponse = transactionDetails.response; // Example field
-            await payment.save({ session });
+            await payment.save();
 
             // Update reservation
-            await reservationModel.findByIdAndUpdate(payment.reservation, { status: 'paid' }, { session });
+            await reservationModel.findByIdAndUpdate(payment.reservation, { status: 'paid' });
 
             // Here you would also decrease inventory stock
             // This part is complex and depends on your inventory logic
-
-            await session.commitTransaction();
-            session.endSession();
             return payment;
 
         } catch (error) {
-            await session.abortTransaction();
-            session.endSession();
             throw error;
         }
     },

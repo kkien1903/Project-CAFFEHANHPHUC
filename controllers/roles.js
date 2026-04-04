@@ -5,7 +5,10 @@ module.exports = {
         return await roleModel.find({ isDeleted: false });
     },
     GetRoleById: async function (id) {
-        return await roleModel.findOne({ _id: id, isDeleted: false });
+        return await roleModel.findById(id);
+    },
+    FindRoleByName: async function (name) {
+        return await roleModel.findOne({ name: name, isDeleted: false });
     },
     CreateRole: async function (roleData) {
         let newRole = new roleModel({

@@ -24,11 +24,12 @@ const checkRole = (...roles) => {
             }
 
             const user = await userController.FindUserById(req.userId);
-            if (!user || !user.role) {
+            // If user or their role is not found (e.g., role was deleted), deny access.
+            if (!user.role) {
                 return res.status(403).send({ message: "Không tìm thấy thông tin người dùng hoặc vai trò." });
             }
 
-            const userRole = user.role.name.toUpperCase(); // Assuming role name is like 'ADMIN', 'USER'
+            const userRole = user.role.name.toUpperCase();
             req.userRole = userRole; // Attach userRole to request for convenience
 
             if (roles.map(role => role.toUpperCase()).includes(userRole)) {

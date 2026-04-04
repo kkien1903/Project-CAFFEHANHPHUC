@@ -1,7 +1,7 @@
 let userModel = require('../schemas/users')
 let bcrypt = require('bcrypt')
 module.exports = {
-    CreateAnUser: async function (userData, session) {
+    CreateAnUser: async function (userData) {
         const { username, password, email, role, avatarUrl, fullName, status, loginCount } = userData;
         let newUser = new userModel({
             username: username,
@@ -13,25 +13,30 @@ module.exports = {
             status,
             loginCount
         })
-        await newUser.save({session});
+        await newUser.save();
         return newUser;
     },
     QueryByUserNameAndPassword: async function (username, password) {
-        let getUser = await userModel.findOne({ username: username });
+        // Also check if the user is soft-deleted
+        let getUser = await userModel.findOne({ username: username, isDeleted: false });
         if (!getUser) {
             return false;
         }
-        if (bcrypt.compareSync(password, getUser.password)) {
+        // Use async compare to avoid blocking the event loop
+        const isMatch = await bcrypt.compare(password, getUser.password);
+        if (isMatch) {
             return getUser;
         }
         return false;
 
     },
     FindUserById: async function (id) {
+        // Use populate to automatically fetch the role details.
+        // This is more efficient than doing it manually.
         return await userModel.findOne({
             _id: id,
             isDeleted: false
-        }).populate('role')
+        }).populate('role');
     },
     FindUserByEmail: async function (email) {
         return await userModel.findOne({
@@ -41,10 +46,10 @@ module.exports = {
     },
     FindUserByToken: async function (token) {
         let user = await userModel.findOne({
-            forgotpasswordToken: token,
+            forgotPasswordToken: token,
             isDeleted: false
         })
-        if (!user || user.forgotpasswordTokenExp < Date.now()) {
+        if (!user || user.forgotPasswordTokenExp < Date.now()) {
             return false
         }
         return user

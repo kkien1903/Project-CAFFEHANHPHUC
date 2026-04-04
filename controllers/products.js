@@ -4,7 +4,7 @@ let slugify = require('slugify');
 
 module.exports = {
     GetAllProducts: async function (query) {
-        const { title, maxPrice, minPrice, limit = 10, page = 1, category, beanType, roastLevel, origin } = query;
+        const { title, maxPrice, minPrice, limit = 10, page = 1, category, origin, ingredients } = query;
 
         let filter = { isDeleted: false };
 
@@ -20,9 +20,11 @@ module.exports = {
         if (category) {
             filter.category = category;
         }
-        if (beanType) filter.beanType = beanType;
-        if (roastLevel) filter.roastLevel = roastLevel;
         if (origin) filter.origin = origin;
+        if (ingredients) {
+            // Lọc các sản phẩm chứa tất cả thành phần được chỉ định
+            filter.ingredients = { $all: ingredients.split(',') };
+        }
 
         return await productModel.find(filter)
             .populate('category')
@@ -32,7 +34,7 @@ module.exports = {
     GetProductById: async function (id) {
         return await productModel.findOne({ _id: id, isDeleted: false }).populate('category');
     },
-    CreateProduct: async function (productData, stock, session) {
+    CreateProduct: async function (productData, stock) {
         const productToSave = {
             ...productData,
             slug: slugify(productData.title, {
@@ -43,13 +45,13 @@ module.exports = {
         };
 
         const newProduct = new productModel(productToSave);
-        const savedProduct = await newProduct.save({ session });
+        const savedProduct = await newProduct.save();
 
         const newInventory = new inventoryModel({
             product: savedProduct._id,
             stock: stock
         });
-        await newInventory.save({ session });
+        await newInventory.save();
 
         return savedProduct;
     },

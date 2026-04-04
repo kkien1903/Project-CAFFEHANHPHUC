@@ -32,27 +32,21 @@ router.get("/:id", checkLogin, async function (req, res, next) {
 
 router.post("/",  postUserValidator, validateResult,
   async function (req, res, next) {
-    let session = await mongoose.startSession()
-    let transaction = session.startTransaction()
     try {
       let newItem = await userController.CreateAnUser({
         username: req.body.username,
         password: req.body.password,
         email: req.body.email,
         role: req.body.role
-      }, session)
+      })
       let newCart = new cartModel({
         user: newItem._id
       })
-      let result = await newCart.save({ session })
+      let result = await newCart.save()
       result = await result.populate('user')
-      session.commitTransaction();
-      session.endSession()
       res.send(result)
     } catch (err) {
-      session.abortTransaction()
-      session.endSession()
-      res.status(400).send({ message: err.message });
+      next(err);
     }
   });
 

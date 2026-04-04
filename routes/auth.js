@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 let userController = require('../controllers/users');
+let roleController = require('../controllers/roles');
 let jwt = require('jsonwebtoken')
 let bcrypt = require('bcrypt')
 let { checkLogin } = require('../utils/authHandler.js')
@@ -13,26 +14,23 @@ const mongoose = require('mongoose');
 /* GET home page. */
 //localhost:3000
 router.post('/register', async function (req, res, next) {
-    const session = await mongoose.startSession();
-    session.startTransaction();
     try {
+        const userRole = await roleController.FindRoleByName("USER");
+        if (!userRole) {
+            throw new Error("Không tìm thấy vai trò người dùng mặc định.");
+        }
         let newUser = await userController.CreateAnUser({
             username: req.body.username,
             password: req.body.password,
             email: req.body.email,
-            role: "69a5462f086d74c9e772b804" // Default user role
-        }, session);
+            role: userRole._id // Use the found role ID
+        });
 
         // Create a cart for the new user
-        await new cartModel({ user: newUser._id }).save({ session });
-
-        await session.commitTransaction();
+        await new cartModel({ user: newUser._id }).save();
         res.send({ message: "Đăng kí thành công" });
     } catch (error) {
-        await session.abortTransaction();
-        res.status(400).send({ message: "Đăng kí thất bại: " + error.message });
-    } finally {
-        session.endSession();
+        next(error);
     }
 });
 router.post('/login', async function (req, res, next) {
@@ -68,17 +66,20 @@ router.post('/logout', checkLogin, function (req, res, next) {
     res.send("da logout ")
 })
 router.post('/changepassword', checkLogin, changePasswordValidator, validateResult, async function (req, res, next) {
-    let { oldpassword, newpassword } = req.body;
-    let user = await userController.FindUserById(req.userId);
-    console.log(user);
-    if (bcrypt.compareSync(oldpassword, user.password)) {
-        user.password = newpassword;
-        await user.save();
-        res.send("password da duoc thay doi")
-    } else {
-        res.status(404).send("old password sai")
+    try {
+        const { oldpassword, newpassword } = req.body;
+        const user = await userController.FindUserById(req.userId);
+        const isMatch = await bcrypt.compare(oldpassword, user.password);
+        if (isMatch) {
+            user.password = newpassword;
+            await user.save();
+            res.send("password da duoc thay doi");
+        } else {
+            res.status(400).send({ message: "old password sai" });
+        }
+    } catch (error) {
+        next(error);
     }
-
 })
 router.post('/forgotpassword', async function (req, res, next) {
     let email = req.body.email;

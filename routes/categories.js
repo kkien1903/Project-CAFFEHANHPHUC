@@ -1,70 +1,59 @@
 var express = require('express');
 var router = express.Router();
 let categoryController = require('../controllers/categories');
-let categoryModel = require('../schemas/categories');
+const { checkLogin, checkRole } = require('../utils/authHandler');
 
 /* GET categories listing. */
 router.get('/', async function (req, res, next) {
   try {
-    let categories = await categoryModel.find({ isDeleted: false });
+    let categories = await categoryController.GetAllCategories();
     res.send(categories);
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    next(error);
   }
 });
 
 router.get('/:id', async function (req, res, next) {
   try {
-    let result = await categoryModel.find({ _id: req.params.id, isDeleted: false });
-    if (result.length > 0) {
+    let result = await categoryController.GetCategoryById(req.params.id);
+    if (result) {
       res.send(result);
     } else {
       res.status(404).send({ message: "id not found" });
     }
   } catch (error) {
-    res.status(404).send({ message: "id not found" });
+    next(error);
   }
 });
 
-router.post('/', async function (req, res, next) {
+router.post('/', checkLogin, checkRole("ADMIN", "MODERATOR"), async function (req, res, next) {
   try {
     let newItem = await categoryController.CreateCategory(req.body);
     res.send(newItem);
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    next(err);
   }
 });
 
-router.put('/:id', async function (req, res, next) {
+router.put('/:id', checkLogin, checkRole("ADMIN", "MODERATOR"), async function (req, res, next) {
   try {
-    let id = req.params.id;
-    let updatedItem = await categoryModel.findById(id);
+    let updatedItem = await categoryController.UpdateCategory(req.params.id, req.body);
     if (!updatedItem) return res.status(404).send({ message: "id not found" });
-
-    for (const key of Object.keys(req.body)) {
-      updatedItem[key] = req.body[key];
-    }
-    await updatedItem.save();
-
     res.send(updatedItem);
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    next(err);
   }
 });
 
-router.delete('/:id', async function (req, res, next) {
+router.delete('/:id', checkLogin, checkRole("ADMIN"), async function (req, res, next) {
   try {
-    let updatedItem = await categoryModel.findByIdAndUpdate(
-      req.params.id,
-      { isDeleted: true },
-      { new: true }
-    );
+    let updatedItem = await categoryController.DeleteCategory(req.params.id);
     if (!updatedItem) {
       return res.status(404).send({ message: "id not found" });
     }
     res.send(updatedItem);
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    next(err);
   }
 });
 module.exports = router;

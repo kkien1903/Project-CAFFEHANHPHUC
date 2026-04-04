@@ -1,80 +1,78 @@
 var express = require('express');
 var router = express.Router();
 let reviewController = require('../controllers/reviews');
-let reviewModel = require('../schemas/reviews');
-let { checkLogin } = require('../utils/authHandler.js');
+let { checkLogin, checkRole } = require('../utils/authHandler.js');
 
 /* GET reviews listing. */
 router.get('/', async function (req, res, next) {
   try {
-    let reviews = await reviewModel.find({ isDeleted: false })
-      .populate('product', 'title')
-      .populate('user', 'username');
+    // Can be public, or add checkLogin if only logged-in users can see reviews
+    let reviews = await reviewController.GetAllReviews();
     res.send(reviews);
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    next(error);
   }
 });
 
-router.get('/:id', async function (req, res, next) {
+router.get('/:id', async function (req, res, next) { // Can be public
   try {
-    let result = await reviewModel.find({ _id: req.params.id, isDeleted: false });
-    if (result.length > 0) {
+    let result = await reviewController.GetReviewById(req.params.id);
+    if (result) {
       res.send(result);
     } else {
       res.status(404).send({ message: "id not found" });
     }
   } catch (error) {
-    res.status(404).send({ message: "id not found" });
+    next(error);
   }
 });
 
 router.post('/', checkLogin, async function (req, res, next) {
   try {
     let newItem = await reviewController.CreateReview({
-      product: req.body.product,
+      ...req.body,
       user: req.userId, // Automatically assign logged in user
-      rating: req.body.rating,
-      comment: req.body.comment
     });
     res.status(201).send(newItem);
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    next(err);
   }
 });
 
 router.put('/:id', checkLogin, async function (req, res, next) {
   try {
-    // Add logic to ensure only the user who wrote the review or an admin can update it
-    let id = req.params.id;
-    let updatedItem = await reviewModel.findById(id);
-    if (!updatedItem) return res.status(404).send({ message: "id not found" });
+    const reviewId = req.params.id;
+    const review = await reviewController.GetReviewById(reviewId);
 
-    for (const key of Object.keys(req.body)) {
-      updatedItem[key] = req.body[key];
+    if (!review) {
+      return res.status(404).send({ message: "Review not found" });
     }
-    await updatedItem.save();
 
-    res.send(updatedItem);
+    // Ensure only the user who wrote the review or an admin can update it
+    if (review.user._id.toString() !== req.userId && req.userRole !== 'ADMIN') {
+      return res.status(403).send({ message: "Bạn không có quyền cập nhật review này." });
+    }
+
+    // Prevent user from changing the product or user associated with the review
+    const { product, user, ...updateData } = req.body;
+
+    const updatedReview = await reviewController.UpdateReview(reviewId, updateData);
+    res.send(updatedReview);
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    next(err);
   }
 });
 
-router.delete('/:id', async function (req, res, next) {
+router.delete('/:id', checkLogin, checkRole("ADMIN"), async function (req, res, next) {
   try {
-    // Add logic to ensure only admin can delete
-    let updatedItem = await reviewModel.findByIdAndUpdate(
-      req.params.id,
-      { isDeleted: true },
-      { new: true }
-    );
+    // Only admins can soft-delete reviews
+    let updatedItem = await reviewController.DeleteReview(req.params.id);
     if (!updatedItem) {
       return res.status(404).send({ message: "id not found" });
     }
     res.send(updatedItem);
   } catch (err) {
-    res.status(400).send({ message: err.message });
+    next(err);
   }
 });
 module.exports = router;
