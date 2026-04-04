@@ -1,15 +1,31 @@
 let cartModel = require('../schemas/cart');
 const productModel = require('../schemas/products');
 
+const populateAndCleanCart = async (cart) => {
+    if (!cart) return null;
+
+    const populatedCart = await cart.populate({
+        path: 'items.product',
+        model: 'product',
+        match: { isDeleted: false }, // Chỉ populate những sản phẩm chưa bị xóa
+    });
+
+    // Lọc ra những item có sản phẩm đã bị xóa (product sẽ là null)
+    const originalItemCount = populatedCart.items.length;
+    populatedCart.items = populatedCart.items.filter(item => item.product);
+
+    // Nếu có item bị xóa, lưu lại giỏ hàng đã được làm sạch
+    if (populatedCart.items.length < originalItemCount) {
+        await populatedCart.save();
+    }
+
+    return populatedCart;
+};
+
 module.exports = {
     GetCartByUserId: async function (userId) {
-        const cart = await cartModel.findOne({ user: userId })
-            .populate({
-                path: 'items.product',
-                model: 'product',
-                select: 'title price images slug'
-            });
-        return cart;
+        const cart = await cartModel.findOne({ user: userId });
+        return await populateAndCleanCart(cart);
     },
     AddItemToCart: async function (userId, productId, quantity, size) {
         const product = await productModel.findById(productId);
@@ -17,7 +33,7 @@ module.exports = {
             throw new Error("Sản phẩm không tồn tại.");
         }
         if (!size || !product.sizeOptions.includes(size)) {
-            throw new Error(`Size '${size}' không hợp lệ cho sản phẩm này.`);
+            throw new Error(`Size '${size}' không hợp lệ cho sản phẩm này. Các size hợp lệ: ${product.sizeOptions.join(', ')}`);
         }
 
         let currentCart = await cartModel.findOne({ user: userId });
@@ -37,8 +53,8 @@ module.exports = {
             currentCart.items[index].quantity += quantity;
         }
 
-        await currentCart.save();
-        return await currentCart.populate({ path: 'items.product' });
+        const savedCart = await currentCart.save();
+        return await populateAndCleanCart(savedCart);
     },
     DecreaseItemInCart: async function (userId, productId, quantity, size) {
         let currentCart = await cartModel.findOne({ user: userId });
@@ -61,8 +77,8 @@ module.exports = {
             }
         }
 
-        await currentCart.save();
-        return await currentCart.populate({ path: 'items.product' });
+        const savedCart = await currentCart.save();
+        return await populateAndCleanCart(savedCart);
     },
     RemoveItemFromCart: async function (userId, productId, size) {
         let currentCart = await cartModel.findOne({ user: userId });
@@ -75,8 +91,8 @@ module.exports = {
         if (index > -1) {
             currentCart.items.splice(index, 1);
         }
-        await currentCart.save();
-        return await currentCart.populate({ path: 'items.product' });
+        const savedCart = await currentCart.save();
+        return await populateAndCleanCart(savedCart);
     },
     ClearCart: async function (userId) {
         let currentCart = await cartModel.findOne({ user: userId });

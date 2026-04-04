@@ -1,5 +1,8 @@
 let orderModel = require('../schemas/orders');
 const productModel = require('../schemas/products');
+const cartModel = require('../schemas/cart');
+const inventoryController = require('./inventories');
+const mongoose = require('mongoose');
 
 module.exports = {
     GetAllOrders: async function () {
@@ -12,41 +15,76 @@ module.exports = {
             .populate('user')
             .populate('items.product');
     },
-    CreateOrder: async function (orderData) {
-        const { user, items, shippingAddress, paymentMethod } = orderData;
-        if (!items || items.length === 0) {
-            throw new Error("Đơn hàng phải có ít nhất một sản phẩm.");
-        }
+    CreateOrderFromCart: async function (userId, orderInfo) {
+        const { shippingAddress, paymentMethod } = orderInfo;
+        // Ghi chú: Đã loại bỏ Transaction để tương thích với môi trường MongoDB standalone.
+        // Điều này có nghĩa là nếu có lỗi xảy ra ở giữa quá trình,
+        // các thay đổi sẽ không được tự động phục hồi.
 
-        // Fetch product prices from DB to ensure accuracy
-        const productIds = items.map(item => item.product);
-        const products = await productModel.find({ '_id': { $in: productIds } });
-        const productPriceMap = new Map(products.map(p => [p._id.toString(), p.price]));
-
-        let totalAmount = 0;
-        const processedItems = [];
-
-        for (const item of items) {
-            const price = productPriceMap.get(item.product.toString());
-            if (price === undefined) {
-                throw new Error(`Sản phẩm với ID ${item.product} không tồn tại hoặc không có giá.`);
+        try {
+            // 1. Lấy giỏ hàng của người dùng
+            const cart = await cartModel.findOne({ user: userId });
+            if (!cart || cart.items.length === 0) {
+                throw new Error("Giỏ hàng của bạn đang trống.");
             }
-            processedItems.push({
-                product: item.product,
-                quantity: item.quantity,
-                price: price // Use price from DB
-            });
-            totalAmount += item.quantity * price;
-        }
 
-        const newOrder = new orderModel({
-            user,
-            items: processedItems,
-            totalAmount,
-            shippingAddress,
-            paymentMethod
-        });
-        return await newOrder.save();
+            // 2. Lấy thông tin chi tiết sản phẩm và kiểm tra
+            await cart.populate({ path: 'items.product' });
+
+            let totalAmount = 0;
+            const orderItems = [];
+
+            // 3. Xác thực tất cả các mục trong giỏ hàng trước khi thực hiện bất kỳ thay đổi nào
+            for (const item of cart.items) {
+                if (!item.product || item.product.isDeleted) {
+                    throw new Error(`Sản phẩm "${item.product?.title || 'không xác định'}" không còn tồn tại.`);
+                }
+                const inventoryItem = await inventoryController.GetInventoryByProductId(item.product._id);
+                if (!inventoryItem || inventoryItem.stock < item.quantity) {
+                    throw new Error(`Sản phẩm "${item.product.title}" (size ${item.size}) không đủ số lượng trong kho.`);
+                }
+            }
+
+            // 4. Chuẩn bị các mục cho đơn hàng và tính tổng tiền
+            for (const item of cart.items) {
+                const price = item.product.price;
+                totalAmount += item.quantity * price;
+
+                orderItems.push({
+                    product: item.product._id,
+                    quantity: item.quantity,
+                    size: item.size,
+                    price: price
+                });
+            }
+
+            // 5. Tạo đơn hàng
+            const newOrder = new orderModel({
+                user: userId,
+                items: orderItems,
+                totalAmount,
+                shippingAddress,
+                paymentMethod
+            });
+            const savedOrder = await newOrder.save();
+
+            // 6. Giảm số lượng tồn kho (sau khi đã chắc chắn tạo được đơn hàng)
+            // Lưu ý: Nếu bước này thất bại, đơn hàng đã được tạo nhưng tồn kho chưa bị trừ.
+            // Đây là một sự đánh đổi khi không sử dụng transaction.
+            for (const item of cart.items) {
+                await inventoryController.DecreaseStock(item.product._id, item.quantity);
+            }
+
+            // 7. Xóa giỏ hàng
+            cart.items = [];
+            await cart.save();
+
+            return savedOrder;
+        } catch (error) {
+            // Vì không có transaction, không thể tự động rollback.
+            // Cần có cơ chế xử lý lỗi phức tạp hơn ở đây nếu muốn hệ thống an toàn tuyệt đối.
+            throw error; // Ném lỗi ra để route xử lý
+        }
     },
     UpdateOrder: async function (id, updateData) {
         const { items, ...otherData } = updateData;
