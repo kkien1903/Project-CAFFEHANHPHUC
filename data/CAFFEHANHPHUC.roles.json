@@ -1,0 +1,45 @@
+[{
+  "_id": {
+    "$oid": "69d0b0467281f7694f3d887c"
+  },
+  "name": "ADMIN",
+  "description": "Người Quản Trị",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-04T06:31:34.212Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T06:31:34.212Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d0b2f2342778d3aa373469"
+  },
+  "name": "MODERATOR",
+  "description": "Người dùng có quyền kiểm duyệt nội dung, sản phẩm.",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-04T06:42:58.671Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T06:42:58.671Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d0b34f342778d3aa37346e"
+  },
+  "name": "USER",
+  "description": "Người Dùng",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-04T06:44:31.242Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-04T06:44:31.242Z"
+  },
+  "__v": 0
+}]
