@@ -2,22 +2,29 @@ var express = require('express');
 var router = express.Router();
 let orderController = require('../controllers/orders');
 let orderModel = require('../schemas/orders');
+let paymentModel = require('../schemas/payments');
 let { checkLogin, checkRole } = require('../utils/authHandler.js');
 
-/* GET orders listing. */
+// Lấy TẤT CẢ đơn hàng cho trang Admin
+router.get('/all', checkLogin, checkRole('ADMIN'), async function (req, res, next) {
+  try {
+    let orders = await orderModel.find({ isDeleted: false })
+      .populate('user', 'username email')
+      .populate('items.product', 'title price images sizeOptions')
+      .sort({ createdAt: -1 });
+    res.send(orders);
+  } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+});
+
+// Lấy đơn hàng của cá nhân user đang đăng nhập
 router.get('/', checkLogin, async function (req, res, next) {
   try {
-    let findQuery = { isDeleted: false };
-
-    // If the user is not an admin, they can only see their own orders.
-    if (req.userRole !== 'ADMIN') {
-      findQuery.user = req.userId;
-    }
-
-    let orders = await orderModel.find(findQuery)
-      .populate('user', 'username email fullName')
-      .populate('items.product', 'title price sku');
-
+    let orders = await orderModel.find({ user: req.userId, isDeleted: false })
+      .populate('user', 'username email')
+      .populate('items.product', 'title price images sizeOptions')
+      .sort({ createdAt: -1 }); // Đưa đơn hàng mới nhất lên trên cùng
     res.send(orders);
   } catch (error) {
     res.status(500).send({ message: error.message });
@@ -26,54 +33,99 @@ router.get('/', checkLogin, async function (req, res, next) {
 
 router.get('/:id', checkLogin, async function (req, res, next) {
   try {
-    let order = await orderController.GetOrderById(req.params.id);
-    if (order) {
-      // Ensure user can only see their own order, unless they are an admin
-      if (order.user._id.toString() !== req.userId && req.userRole !== 'ADMIN') {
-        return res.status(403).send({ message: "Bạn không có quyền xem đơn hàng này." });
-      }
-      res.send(order);
+    let result = await orderModel.find({ _id: req.params.id, isDeleted: false });
+    if (result.length > 0) {
+      // Add check to ensure user can only see their own order, unless they are admin
+      res.send(result);
     } else {
       res.status(404).send({ message: "id not found" });
     }
   } catch (error) {
-    // Forward error to the error handler
-    next(error);
+    res.status(404).send({ message: "id not found" });
   }
 });
 
 router.post('/', checkLogin, async function (req, res, next) {
   try {
-    const { shippingAddress, paymentMethod } = req.body;
-    if (!shippingAddress) {
-      return res.status(400).send({ message: "Địa chỉ giao hàng là bắt buộc." });
-    }
-    const newOrder = await orderController.CreateOrderFromCart(req.userId, { shippingAddress, paymentMethod });
-    res.status(201).send(newOrder);
+    let newItem = await orderController.CreateOrder({
+      ...req.body,
+      user: req.userId // Assign logged in user to the order
+    });
+    res.status(201).send(newItem);
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
 });
 
-router.put('/:id', checkLogin, checkRole("ADMIN"), async function (req, res, next) {
+// User tự hủy đơn hàng của mình
+router.put('/:id/cancel', checkLogin, async function (req, res, next) {
   try {
     let id = req.params.id;
-    // Only allow updating specific fields like 'status'
-    const { status } = req.body;
-    if (!status) return res.status(400).send({ message: "Chỉ có thể cập nhật trạng thái (status)." });
+    let order = await orderModel.findOne({ _id: id, user: req.userId, isDeleted: false });
     
-    const updatedOrder = await orderController.UpdateOrder(id, { status });
-    if (!updatedOrder) return res.status(404).send({ message: "id not found" });
-    res.send(updatedOrder);
+    if (!order) return res.status(404).send({ message: "Không tìm thấy đơn hàng." });
+    if (order.status !== 'PENDING') return res.status(400).send({ message: "Chỉ có thể hủy đơn hàng đang chờ xử lý." });
+
+    order.status = 'CANCELLED';
+    await order.save();
+
+    // Cập nhật trạng thái Payment sang đã hủy
+    await paymentModel.findOneAndUpdate({ order: id }, { status: 'cancelled', cancelledAt: new Date() });
+
+    res.send(order);
   } catch (err) {
     res.status(400).send({ message: err.message });
   }
 });
 
-router.delete('/:id', checkLogin, checkRole("ADMIN"), async function (req, res, next) {
+// Cập nhật trạng thái đơn hàng và đồng bộ sang Thanh toán
+router.put('/:id/status', checkLogin, checkRole('ADMIN'), async function (req, res, next) {
   try {
-    // Soft delete the order
-    let updatedItem = await orderController.DeleteOrder(req.params.id);
+    let id = req.params.id;
+    let { status } = req.body;
+    
+    let updatedItem = await orderModel.findByIdAndUpdate(id, { status: status }, { new: true });
+    if (!updatedItem) return res.status(404).send({ message: "id not found" });
+
+    // Tự động đồng bộ trạng thái Payment dựa trên đơn hàng
+    if (status === 'COMPLETED') {
+      await paymentModel.findOneAndUpdate({ order: id }, { status: 'paid', paidAt: new Date() });
+    } else if (status === 'CANCELLED') {
+      await paymentModel.findOneAndUpdate({ order: id }, { status: 'cancelled', cancelledAt: new Date() });
+    }
+
+    res.send(updatedItem);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
+router.put('/:id', checkLogin, async function (req, res, next) {
+  try {
+    // Add role check, only admin should update orders
+    let id = req.params.id;
+    let updatedItem = await orderModel.findById(id);
+    if (!updatedItem) return res.status(404).send({ message: "id not found" });
+
+    for (const key of Object.keys(req.body)) {
+      updatedItem[key] = req.body[key];
+    }
+    await updatedItem.save();
+
+    res.send(updatedItem);
+  } catch (err) {
+    res.status(400).send({ message: err.message });
+  }
+});
+
+router.delete('/:id', checkLogin, async function (req, res, next) {
+  try {
+    // Add role check, only admin should delete orders
+    let updatedItem = await orderModel.findByIdAndUpdate(
+      req.params.id,
+      { isDeleted: true },
+      { new: true }
+    );
     if (!updatedItem) return res.status(404).send({ message: "id not found" });
     res.send(updatedItem);
   } catch (err) {

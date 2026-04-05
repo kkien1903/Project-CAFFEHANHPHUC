@@ -1,0 +1,327 @@
+[{
+  "_id": {
+    "$oid": "69d264e253c02e2709069d33"
+  },
+  "product": {
+    "$oid": "69d264e253c02e2709069d31"
+  },
+  "stock": 100,
+  "reserved": 0,
+  "soldCount": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2667553c02e2709069d5e"
+  },
+  "product": {
+    "$oid": "69d2667453c02e2709069d5c"
+  },
+  "stock": 100,
+  "reserved": 0,
+  "soldCount": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d266e653c02e2709069d67"
+  },
+  "product": {
+    "$oid": "69d266e653c02e2709069d65"
+  },
+  "stock": 99,
+  "reserved": 0,
+  "soldCount": 1,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2674a53c02e2709069d70"
+  },
+  "product": {
+    "$oid": "69d2674a53c02e2709069d6e"
+  },
+  "stock": 100,
+  "reserved": 0,
+  "soldCount": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d267b353c02e2709069d79"
+  },
+  "product": {
+    "$oid": "69d267b353c02e2709069d77"
+  },
+  "stock": 100,
+  "reserved": 0,
+  "soldCount": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2685f53c02e2709069d82"
+  },
+  "product": {
+    "$oid": "69d2685f53c02e2709069d80"
+  },
+  "stock": 99,
+  "reserved": 0,
+  "soldCount": 1,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d268cd53c02e2709069d8b"
+  },
+  "product": {
+    "$oid": "69d268cd53c02e2709069d89"
+  },
+  "stock": 100,
+  "reserved": 0,
+  "soldCount": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2692a53c02e2709069d94"
+  },
+  "product": {
+    "$oid": "69d2692a53c02e2709069d92"
+  },
+  "stock": 100,
+  "reserved": 0,
+  "soldCount": 0,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2698953c02e2709069d9d"
+  },
+  "product": {
+    "$oid": "69d2698953c02e2709069d9b"
+  },
+  "stock": 99,
+  "reserved": 0,
+  "soldCount": 1,
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d26a1a53c02e2709069dae"
+  },
+  "product": {
+    "$oid": "69d26a1a53c02e2709069dac"
+  },
+  "stock": 50,
+  "reserved": 0,
+  "soldCount": 0,
+  "__v": 0,
+  "updatedAt": {
+    "$date": "2026-04-05T15:54:26.279Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "69d288d732f8896306ee8b9f"
+  },
+  "product": {
+    "$oid": "69d288d732f8896306ee8b9d"
+  },
+  "stock": 43,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:07:51.176Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:07:51.176Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2896932f8896306ee8bd3"
+  },
+  "product": {
+    "$oid": "69d2896932f8896306ee8bd1"
+  },
+  "stock": 30,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:10:17.630Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:10:17.630Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d289d232f8896306ee8be7"
+  },
+  "product": {
+    "$oid": "69d289d232f8896306ee8be5"
+  },
+  "stock": 17,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:12:02.105Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:12:02.105Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28a2732f8896306ee8bf4"
+  },
+  "product": {
+    "$oid": "69d28a2732f8896306ee8bf2"
+  },
+  "stock": 23,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:13:27.482Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:13:46.321Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28ae632f8896306ee8c0c"
+  },
+  "product": {
+    "$oid": "69d28ae632f8896306ee8c0a"
+  },
+  "stock": 78,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:16:38.475Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:16:38.475Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28b4232f8896306ee8c19"
+  },
+  "product": {
+    "$oid": "69d28b4232f8896306ee8c17"
+  },
+  "stock": 66,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:18:10.046Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:18:10.046Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28bcb32f8896306ee8c26"
+  },
+  "product": {
+    "$oid": "69d28bcb32f8896306ee8c24"
+  },
+  "stock": 20,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:20:27.687Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:20:27.687Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28c2d32f8896306ee8c33"
+  },
+  "product": {
+    "$oid": "69d28c2d32f8896306ee8c31"
+  },
+  "stock": 10,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:22:05.415Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:22:05.415Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28c7432f8896306ee8c40"
+  },
+  "product": {
+    "$oid": "69d28c7432f8896306ee8c3e"
+  },
+  "stock": 12,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:23:16.357Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:23:41.549Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28d2832f8896306ee8c6c"
+  },
+  "product": {
+    "$oid": "69d28d2832f8896306ee8c6a"
+  },
+  "stock": 44,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:26:16.077Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:26:16.077Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28d7a32f8896306ee8c80"
+  },
+  "product": {
+    "$oid": "69d28d7a32f8896306ee8c7e"
+  },
+  "stock": 100,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:27:38.314Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:27:38.314Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28de532f8896306ee8cad"
+  },
+  "product": {
+    "$oid": "69d28de532f8896306ee8cab"
+  },
+  "stock": 50,
+  "soldCount": 0,
+  "createdAt": {
+    "$date": "2026-04-05T16:29:25.622Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:29:25.622Z"
+  },
+  "__v": 0
+}]

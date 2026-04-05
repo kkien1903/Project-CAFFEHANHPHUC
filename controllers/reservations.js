@@ -1,6 +1,7 @@
 const reservationModel = require('../schemas/reservations');
 const productModel = require('../schemas/products');
 const mongoose = require('mongoose');
+const inventoryController = require('./inventories');
 
 module.exports = {
     CreateReservation: async function (userId, items) {
@@ -17,6 +18,13 @@ module.exports = {
             if (!price) {
                 throw new Error(`Sản phẩm với ID ${item.product} không tồn tại hoặc không có giá.`);
             }
+            
+            // Kiểm tra tồn kho trước khi giữ chỗ
+            const inventoryItem = await inventoryController.GetInventoryByProductId(item.product);
+            if (!inventoryItem || inventoryItem.stock < item.quantity) {
+                throw new Error(`Sản phẩm (ID: ${item.product}) không đủ số lượng trong kho để giữ chỗ.`);
+            }
+
             const subtotal = price * item.quantity;
             totalAmount += subtotal;
             processedItems.push({
@@ -35,7 +43,14 @@ module.exports = {
             expiredAt: new Date(Date.now() + 30 * 60 * 1000)
         });
 
-        return await newReservation.save();
+        const savedReservation = await newReservation.save();
+
+        // Trừ tồn kho sau khi đã tạo giữ chỗ thành công
+        for (const item of processedItems) {
+            await inventoryController.DecreaseStock(item.product, item.quantity);
+        }
+
+        return savedReservation;
     },
     GetReservationById: async function (id) {
         return await reservationModel.findOne({ _id: id, isDeleted: false })
@@ -55,9 +70,29 @@ module.exports = {
             .sort({ createdAt: -1 });
     },
     UpdateReservationStatus: async function (id, status) {
-        return await reservationModel.findByIdAndUpdate(id, { status: status }, { new: true });
+        const reservation = await reservationModel.findById(id);
+        if (!reservation) throw new Error("Không tìm thấy đơn giữ chỗ");
+
+        // Hoàn lại kho nếu đơn đang 'actived' bị đổi thành 'expired' hoặc 'cancelled'
+        if (reservation.status === 'actived' && (status === 'expired' || status === 'cancelled')) {
+            for (const item of reservation.items) {
+                await inventoryController.IncreaseStock(item.product, item.quantity);
+            }
+        }
+        
+        reservation.status = status;
+        return await reservation.save();
     },
     CancelReservation: async function (id) {
-        return await reservationModel.findByIdAndUpdate(id, { status: 'cancelled' }, { new: true });
+        const reservation = await reservationModel.findById(id);
+        if (!reservation) throw new Error("Không tìm thấy đơn giữ chỗ");
+
+        if (reservation.status === 'actived') {
+            for (const item of reservation.items) {
+                await inventoryController.IncreaseStock(item.product, item.quantity);
+            }
+        }
+        reservation.status = 'cancelled';
+        return await reservation.save();
     }
 };

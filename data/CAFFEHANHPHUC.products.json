@@ -1,0 +1,796 @@
+[{
+  "_id": {
+    "$oid": "69d264e253c02e2709069d31"
+  },
+  "title": "Cà phê Đen Phin",
+  "sku": "CF001",
+  "slug": "Ca-phe-Den-Phin",
+  "description": "Hương vị đậm đà, nguyên bản của hạt cà phê Robusta rang xay nguyên chất.",
+  "price": 29000,
+  "category": {
+    "$oid": "69d236c9455f04ef67d8cbbd"
+  },
+  "origin": "Buôn Ma Thuột",
+  "sizeOptions": [
+    "S",
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Hạt Robusta",
+    "Nước nóng"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775396066465-211310715.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:34:26.499Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:23:10.839Z"
+  },
+  "__v": 0,
+  "stock": 50
+},
+{
+  "_id": {
+    "$oid": "69d2667453c02e2709069d5c"
+  },
+  "title": "Cà phê Sữa Phin",
+  "sku": "CF002",
+  "slug": "Ca-phe-Sua-Phin",
+  "description": "Sự kết hợp hoàn hảo giữa vị đắng nồng và vị béo ngọt của sữa đặc truyền thống.",
+  "price": 35000,
+  "category": {
+    "$oid": "69d236c9455f04ef67d8cbbd"
+  },
+  "origin": "Buôn Ma Thuột",
+  "sizeOptions": [
+    "S",
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Hạt Robusta",
+    "Sữa đặc",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775396468970-597189991.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:41:08.997Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:23:21.111Z"
+  },
+  "__v": 0,
+  "stock": 50
+},
+{
+  "_id": {
+    "$oid": "69d266e653c02e2709069d65"
+  },
+  "title": "Bạc Xỉu Phin",
+  "sku": "CF003",
+  "slug": "Bac-Xiu-Phin",
+  "description": "Dành cho người yêu vị béo ngậy của sữa nhưng vẫn muốn thoang thoảng hương cà phê.",
+  "price": 39000,
+  "category": {
+    "$oid": "69d236c9455f04ef67d8cbbd"
+  },
+  "origin": "Lâm Đồng",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Sữa tươi",
+    "Sữa đặc",
+    "Cà phê phin"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775396582969-906233106.jpeg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:43:02.993Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:23:28.382Z"
+  },
+  "__v": 0,
+  "stock": 100
+},
+{
+  "_id": {
+    "$oid": "69d2674a53c02e2709069d6e"
+  },
+  "title": "Cà phê Muối Phin",
+  "sku": "CF004",
+  "slug": "Ca-phe-Muoi-Phin",
+  "description": "Hương vị độc đáo, sự kết hợp tinh tế giữa vị đắng, ngọt béo và chút mặn nhẹ đầu lưỡi.",
+  "price": 45000,
+  "category": {
+    "$oid": "69d236c9455f04ef67d8cbbd"
+  },
+  "origin": "Huế",
+  "sizeOptions": [
+    "S",
+    "M"
+  ],
+  "ingredients": [
+    "Cà phê phin",
+    "Kem béo",
+    "Muối biển"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775396682376-33897932.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:44:42.410Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:23:36.126Z"
+  },
+  "__v": 0,
+  "stock": 19
+},
+{
+  "_id": {
+    "$oid": "69d267b353c02e2709069d77"
+  },
+  "title": "Cà phê Đen Đường",
+  "sku": "CF005",
+  "slug": "Ca-phe-Den-Duong",
+  "description": "Vị đắng đặc trưng hòa quyện cùng sự thanh ngọt dịu nhẹ của đường phèn tinh khiết.",
+  "price": 32000,
+  "category": {
+    "$oid": "69d236c9455f04ef67d8cbbd"
+  },
+  "origin": "Đắk Lắk",
+  "sizeOptions": [
+    "S",
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Hạt Robusta",
+    "Đường phèn",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775396787060-572949111.webp"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:46:27.081Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:23:48.124Z"
+  },
+  "__v": 0,
+  "stock": 100
+},
+{
+  "_id": {
+    "$oid": "69d2685f53c02e2709069d80"
+  },
+  "title": "Latte",
+  "sku": "PM001",
+  "slug": "Latte",
+  "description": "Sự kết hợp dịu dàng giữa vị đắng nhẹ và vị béo ngậy của sữa tươi, điểm xuyết bằng nghệ thuật Latte Art tinh tế.",
+  "price": 45000,
+  "category": {
+    "$oid": "69d25f6953c02e2709069cdd"
+  },
+  "origin": "Hạt Arabica",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Espresso",
+    "Sữa tươi thanh trùng",
+    "Bọt sữa mỏng"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775396959387-457968346.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:49:19.417Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:24:05.448Z"
+  },
+  "__v": 0,
+  "stock": 20
+},
+{
+  "_id": {
+    "$oid": "69d268cd53c02e2709069d89"
+  },
+  "title": "Cappuccino",
+  "sku": "PM002",
+  "slug": "Cappuccino",
+  "description": "Tỉ lệ hoàn hảo giữa cà phê và bọt sữa bồng bềnh, mang đến cảm giác êm ái và hương thơm nồng nàn trong từng ngụm.",
+  "price": 45000,
+  "category": {
+    "$oid": "69d25f6953c02e2709069cdd"
+  },
+  "origin": "Hạt Arabica",
+  "sizeOptions": [
+    "M"
+  ],
+  "ingredients": [
+    "Espresso",
+    "Sữa nóng",
+    "Bọt sữa dày",
+    "Bột Cacao"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775397069473-904559493.avif"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:51:09.500Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:23:57.311Z"
+  },
+  "__v": 0,
+  "stock": 15
+},
+{
+  "_id": {
+    "$oid": "69d2692a53c02e2709069d92"
+  },
+  "title": "Americano",
+  "sku": "PM003",
+  "slug": "Americano",
+  "description": "Phiên bản nhẹ nhàng hơn của Espresso nhưng vẫn giữ trọn hương vị nguyên bản, phù hợp cho sự tỉnh táo kéo dài.",
+  "price": 35000,
+  "category": {
+    "$oid": "69d25f6953c02e2709069cdd"
+  },
+  "origin": "Hạt Arabica",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Espresso",
+    "Nước nóng"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775397162690-593057397.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:52:42.873Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:24:12.593Z"
+  },
+  "__v": 0,
+  "stock": 10
+},
+{
+  "_id": {
+    "$oid": "69d2698953c02e2709069d9b"
+  },
+  "title": "Caramel Macchiato",
+  "sku": "PM004",
+  "slug": "Caramel-Macchiato",
+  "description": "Sự phân tầng đẹp mắt giữa sữa vani ngọt ngào, Espresso đậm đà và lớp sốt Caramel thơm lừng trên bề mặt.",
+  "price": 55000,
+  "category": {
+    "$oid": "69d25f6953c02e2709069cdd"
+  },
+  "origin": "Hạt Arabica",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Espresso",
+    "Sữa tươi",
+    "Sốt Caramel",
+    "Vani"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775397257035-289164451.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:54:17.054Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:24:22.771Z"
+  },
+  "__v": 0,
+  "stock": 10
+},
+{
+  "_id": {
+    "$oid": "69d26a1a53c02e2709069dac"
+  },
+  "title": "Cold Brew Truyền Thống",
+  "sku": "CB001",
+  "slug": "Cold-Brew-Truyen-Thong",
+  "description": "Vị cà phê mượt mà, ít đắng, thoảng hương trái cây chín và hậu vị ngọt thanh đặc trưng.",
+  "price": 45000,
+  "category": {
+    "$oid": "69d2601853c02e2709069cec"
+  },
+  "origin": "Hạt Arabica",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Cà phê ủ lạnh 16 tiếng",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775397449570-759523287.png"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:56:42.841Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T15:54:26.295Z"
+  },
+  "__v": 0,
+  "stock": 50
+},
+{
+  "_id": {
+    "$oid": "69d288d732f8896306ee8b9d"
+  },
+  "title": "Cold Brew Cam Sả",
+  "sku": "CB002",
+  "slug": "Cold-Brew-Cam-Sa",
+  "description": "Sự kết hợp bùng nổ giữa vị thanh khiết của cà phê ủ chậm và hương thơm sảng khoái từ cam sả.",
+  "price": 55000,
+  "category": {
+    "$oid": "69d2601853c02e2709069cec"
+  },
+  "origin": "Hạt Arabica",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Cà phê ủ lạnh",
+    "Cam vàng tươi",
+    "Sả cây",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775405271117-742687969.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:07:51.164Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:07:51.164Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2896932f8896306ee8bd1"
+  },
+  "title": "Cà Phê Đá Xay",
+  "sku": "DX001",
+  "slug": "Ca-Phe-Da-Xay",
+  "description": "Sự kết hợp hoàn hảo giữa vị cà phê đậm đà và lớp kem béo ngậy, xay mịn cùng đá tạo cảm giác mát lạnh cực đã.",
+  "price": 55000,
+  "category": {
+    "$oid": "69d2600753c02e2709069ce7"
+  },
+  "origin": "Việt Nam",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Espresso",
+    "Sữa tươi",
+    "Bột frappe",
+    "Đá viên",
+    "Kem tươi (whipping)"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775405417607-653363652.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:10:17.626Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:10:17.626Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d289d232f8896306ee8be5"
+  },
+  "title": "Matcha Đá Xay",
+  "sku": "DX002",
+  "slug": "Matcha-Da-Xay",
+  "description": "Hương thơm đặc trưng của trà xanh Nhật Bản hòa quyện cùng vị béo của sữa, mang lại cảm giác thanh mát và thư giãn.",
+  "price": 59000,
+  "category": {
+    "$oid": "69d2600753c02e2709069ce7"
+  },
+  "origin": "Nhật Bản",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Bột Matcha nguyên chất",
+    "Sữa tươi",
+    "Đá viên",
+    "Kem tươi"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775405522080-81590301.png"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:12:02.102Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:12:02.102Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28a2732f8896306ee8bf2"
+  },
+  "title": "Chocolate Đá Xay",
+  "sku": "DX003",
+  "slug": "Chocolate-Da-Xay",
+  "description": "Vị đắng nhẹ của chocolate thượng hạng kết hợp cùng lớp kem mịn màng, món quà ngọt ngào cho những tín đồ hảo ngọt.",
+  "price": 59000,
+  "category": {
+    "$oid": "69d2600753c02e2709069ce7"
+  },
+  "origin": "Cacao Tiền Giang",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Bột Cacao nguyên chất",
+    "Sốt Chocolate",
+    "Sữa tươi",
+    "Đá viên",
+    "Kem tươi"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775405607462-770777400.webp"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:13:27.478Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:13:46.342Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28ae632f8896306ee8c0a"
+  },
+  "title": "Trà Sữa Truyền Thống",
+  "sku": "TS001",
+  "slug": "Tra-Sua-Truyen-Thong",
+  "description": "Hương vị trà đen đậm đà đặc trưng hòa quyện cùng vị sữa béo ngậy, tạo nên sự cân bằng hoàn hảo \"gây nghiện\".",
+  "price": 45000,
+  "category": {
+    "$oid": "69d25ff753c02e2709069ce2"
+  },
+  "origin": "Lâm Đồn",
+  "sizeOptions": [
+    "S",
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Trà đen đậm vị",
+    "Sữa tươi thanh trùng",
+    "Bột sữa chuyên dụng",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775405798449-277181219.webp"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:16:38.471Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:16:38.471Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28b4232f8896306ee8c17"
+  },
+  "title": "Trà Sữa Lài (Jasmine)",
+  "sku": "TS003",
+  "slug": "Tra-Sua-Lai-(Jasmine)",
+  "description": "Hương thơm dịu nhẹ, thanh khiết của hoa lài quyện trong vị sữa thanh mát, mang lại cảm giác thư thái trong từng ngụm.",
+  "price": 48000,
+  "category": {
+    "$oid": "69d25ff753c02e2709069ce2"
+  },
+  "origin": "Thái Nguyên",
+  "sizeOptions": [
+    "S",
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Trà xanh ướp hoa lài",
+    "Sữa tươi",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775405890027-530664804.webp"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:18:10.043Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:18:10.043Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28bcb32f8896306ee8c24"
+  },
+  "title": "Sinh tố Bơ Sáp",
+  "sku": "ST001",
+  "slug": "Sinh-to-Bo-Sap",
+  "description": "Vị béo ngậy đặc trưng của bơ sáp hòa quyện cùng sữa đặc thơm ngon, mang đến nguồn dinh dưỡng dồi dào và làn da mịn màng.",
+  "price": 55000,
+  "category": {
+    "$oid": "69d2602b53c02e2709069cf1"
+  },
+  "origin": "Đắk Lắk",
+  "sizeOptions": [
+    "M"
+  ],
+  "ingredients": [
+    "Bơ sáp chín cây",
+    "Sữa tươi",
+    "Sữa đặc",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775406027666-799897796.png"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:20:27.685Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:20:27.685Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28c2d32f8896306ee8c31"
+  },
+  "title": "Nước ép Cam Dứa",
+  "sku": "ST002",
+  "slug": "Nuoc-ep-Cam-Dua",
+  "description": "Sự kết hợp hoàn hảo giữa vị chua thanh của cam và ngọt đậm của dứa, giàu Vitamin C giúp tăng cường sức đề kháng.",
+  "price": 49000,
+  "category": {
+    "$oid": "69d2602b53c02e2709069cf1"
+  },
+  "origin": "Việt Nam",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Cam sành tươi",
+    "Dứa mật",
+    "Đường phèn",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775406125393-24198568.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:22:05.412Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:22:05.412Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28c7432f8896306ee8c3e"
+  },
+  "title": "Sinh tố Việt Quất",
+  "sku": "ST003",
+  "slug": "Sinh-to-Viet-Quat",
+  "description": "Hương vị chua ngọt tinh tế của việt quất hòa cùng sữa chua mịn màng, giàu chất chống oxy hóa và cực kỳ tốt cho sức khỏe.",
+  "price": 65000,
+  "category": {
+    "$oid": "69d2602b53c02e2709069cf1"
+  },
+  "origin": "Lâm Đồng",
+  "sizeOptions": [
+    "M"
+  ],
+  "ingredients": [
+    "Việt quất tươi",
+    "Sữa chua thanh trùng",
+    "Sữa tươi",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775406196335-94534018.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:23:16.355Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:23:41.552Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28d2832f8896306ee8c6a"
+  },
+  "title": "Trà Đào Cam Sả",
+  "sku": "TRA001",
+  "slug": "Tra-Dao-Cam-Sa",
+  "description": "Sự kết hợp lừng danh giữa vị trà đậm đà, hương sả thơm nồng và miếng đào giòn ngọt, mang lại cảm giác sảng khoái tuyệt đối.",
+  "price": 55000,
+  "category": {
+    "$oid": "69d2606653c02e2709069cfb"
+  },
+  "origin": "Bảo Lộc",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Trà đen đặc chế",
+    "Đào miếng giòn",
+    "Cam vàng",
+    "Sả tươi",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775406376046-742838577.png"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:26:16.073Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:26:16.073Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28d7a32f8896306ee8c7e"
+  },
+  "title": "Trà Sen Vàng",
+  "sku": "TRA002",
+  "slug": "Tra-Sen-Vang",
+  "description": "Tác phẩm nghệ thuật thanh tao với vị trà Ô long thuần khiết, hạt sen bùi bùi và lớp kem béo mịn màng tan trên đầu lưỡi.",
+  "price": 59000,
+  "category": {
+    "$oid": "69d2606653c02e2709069cfb"
+  },
+  "origin": "Việt Nam",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Trà Ô long",
+    "Hạt sen tươi",
+    "Củ năng giòn",
+    "Milk Foam béo ngậy",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775406458296-694979083.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:27:38.311Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:27:38.311Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d28de532f8896306ee8cab"
+  },
+  "title": "Trà Vải Lài",
+  "sku": "TRA003",
+  "slug": "Tra-Vai-Lai",
+  "description": "Sự giao thoa tinh tế giữa hương trà lài thanh khiết và vị ngọt lịm, mọng nước từ những quả vải vùng Lục Ngạn.",
+  "price": 49000,
+  "category": {
+    "$oid": "69d2606653c02e2709069cfb"
+  },
+  "origin": "Thái Nguyên",
+  "sizeOptions": [
+    "M",
+    "L"
+  ],
+  "ingredients": [
+    "Trà xanh hương lài",
+    "Quả vải ngâm",
+    "Syrup vải",
+    "Đá"
+  ],
+  "isAvailable": true,
+  "images": [
+    "1775406565601-20450359.jpg"
+  ],
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T16:29:25.619Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:29:25.619Z"
+  },
+  "__v": 0
+}]

@@ -1,0 +1,90 @@
+[{
+  "_id": {
+    "$oid": "69d27421ece83bb5c3283bb2"
+  },
+  "user": {
+    "$oid": "69d2702cece83bb5c3283ad5"
+  },
+  "items": [
+    {
+      "product": {
+        "$oid": "69d266e653c02e2709069d65"
+      },
+      "quantity": 1,
+      "size": "M",
+      "price": 39000
+    }
+  ],
+  "totalAmount": 39000,
+  "status": "pending",
+  "shippingAddress": "54 Đường Số 1",
+  "paymentMethod": "COD",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T14:39:29.464Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T14:39:29.464Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d275c7dbddbdf7737289b7"
+  },
+  "user": {
+    "$oid": "69d22b8d51268896796a4351"
+  },
+  "items": [
+    {
+      "product": {
+        "$oid": "69d2698953c02e2709069d9b"
+      },
+      "quantity": 1,
+      "size": "L",
+      "price": 55000
+    }
+  ],
+  "totalAmount": 55000,
+  "status": "SHIPPING",
+  "shippingAddress": "54 Đường Số 1",
+  "paymentMethod": "COD",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T14:46:31.253Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T14:49:46.695Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d27808ec8e9781946f4f1d"
+  },
+  "user": {
+    "$oid": "69d22b8d51268896796a4351"
+  },
+  "items": [
+    {
+      "product": {
+        "$oid": "69d264e253c02e2709069d31"
+      },
+      "quantity": 1,
+      "size": "S",
+      "price": 29000
+    }
+  ],
+  "totalAmount": 29000,
+  "status": "CANCELLED",
+  "shippingAddress": "54 Đường Số 1",
+  "paymentMethod": "COD",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T14:56:08.714Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T14:57:25.154Z"
+  },
+  "__v": 0
+}]

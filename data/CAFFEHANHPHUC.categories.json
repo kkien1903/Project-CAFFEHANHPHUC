@@ -1,0 +1,128 @@
+[{
+  "_id": {
+    "$oid": "69d236c9455f04ef67d8cbbd"
+  },
+  "name": "Cà Phê Phin Truyền Thống",
+  "slug": "Ca-Phe-Phin-Truyen-Thong",
+  "description": "Những tách cà phê đậm đà từ hạt Robusta nguyên chất, mang lại sự tỉnh táo và hương vị quen thuộc của người Việt.",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T10:17:45.064Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T13:08:29.476Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d25f6953c02e2709069cdd"
+  },
+  "name": "Cà Phê Pha Máy (Espresso)",
+  "slug": "Ca-Phe-Pha-May-(Espresso)",
+  "description": "Sự tinh tế hiện đại, lớp Crema mịn màng đánh thức mọi giác quan.",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:11:05.763Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T13:11:05.763Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d25ff753c02e2709069ce2"
+  },
+  "name": "Trà Sữa Đặc Biệt",
+  "slug": "Tra-Sua-Dac-Biet",
+  "description": "Hương trà nồng nàn hòa quyện cùng vị sữa béo ngậy khó cưỡng.",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:13:27.446Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T13:13:27.446Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2600753c02e2709069ce7"
+  },
+  "name": "Đồ Uống Đá Xay",
+  "slug": "Do-Uong-Da-Xay",
+  "description": "Mát lạnh sảng khoái, bùng nổ hương vị trong từng ngụm tan nhanh.",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:13:43.363Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T13:13:43.363Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2601853c02e2709069cec"
+  },
+  "name": "Cà Phê Ủ Lạnh (Cold Brew)",
+  "slug": "Ca-Phe-U-Lanh-(Cold-Brew)",
+  "description": "Mượt mà và ít đắng, vị cà phê thanh khiết được ủ chậm qua đêm.",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:14:00.556Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T13:14:00.556Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2602b53c02e2709069cf1"
+  },
+  "name": "Nước Ép & Sinh Tố Fresh",
+  "slug": "Nuoc-Ep-and-Sinh-To-Fresh",
+  "description": "Năng lượng xanh từ trái cây tươi, cho cơ thể luôn tươi trẻ.",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:14:19.351Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T13:14:19.351Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2604a53c02e2709069cf6"
+  },
+  "name": "Thức Uống Sáng Tạo",
+  "slug": "Thuc-Uong-Sang-Tao",
+  "description": "Dấu ấn riêng biệt, sự kết hợp độc đáo chỉ có tại quán chúng tôi.",
+  "isDeleted": true,
+  "createdAt": {
+    "$date": "2026-04-05T13:14:50.960Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T16:24:44.557Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2606653c02e2709069cfb"
+  },
+  "name": "Trà Trái Cây Thanh Nhiệt",
+  "slug": "Tra-Trai-Cay-Thanh-Nhiet",
+  "description": "Chút thanh mát từ thiên nhiên, xua tan cái nóng tức thì.",
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T13:15:18.078Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T13:15:18.078Z"
+  },
+  "__v": 0
+}]

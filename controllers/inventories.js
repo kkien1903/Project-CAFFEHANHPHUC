@@ -5,7 +5,8 @@ module.exports = {
         return await inventoryModel.find({})
             .populate({
                 path: 'product',
-                select: 'title price'
+                select: 'title price category images isDeleted',
+                match: { isDeleted: false }
             });
     },
 
@@ -14,7 +15,7 @@ module.exports = {
     },
 
     UpdateInventory: async function (productId, updateData) {
-        return await inventoryModel.findOneAndUpdate({ product: productId }, updateData, { new: true });
+        return await inventoryModel.findOneAndUpdate({ product: productId }, updateData, { new: true, upsert: true });
     },
 
     IncreaseStock: async function (productId, quantity) {

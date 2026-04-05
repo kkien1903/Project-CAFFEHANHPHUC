@@ -1,0 +1,123 @@
+.admin-container {
+  display: flex;
+  min-height: calc(100vh - 80px);
+  background-color: var(--bg-color);
+}
+
+.admin-sidebar {
+  width: 250px;
+  background-color: #FFFFFF;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+  padding: 30px 20px;
+}
+
+.admin-sidebar h3 {
+  color: var(--primary-color);
+  margin-bottom: 30px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.admin-sidebar nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-sidebar nav ul li a {
+  display: block;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  color: #555;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  transition: var(--transition);
+}
+
+.admin-sidebar nav ul li a:hover {
+  background-color: rgba(232, 58, 89, 0.1); /* Dùng màu hồng nhạt từ App.css */
+  color: var(--primary-color);
+}
+
+.admin-content {
+  flex: 1;
+  padding: 40px;
+  background: #FFFFFF;
+  margin: 20px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+/* --- Admin Tables --- */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.admin-table th, .admin-table td {
+  border: 1px solid #E0E0E0;
+  padding: 12px;
+  text-align: left;
+}
+
+.admin-table th {
+  background: #FFF9FA; /* Màu nền nhạt cho table header */
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* --- Admin Forms --- */
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 25px;
+  background: #fdfdfd;
+  border: 1px solid #eee;
+  border-radius: var(--border-radius);
+}
+
+.admin-form input, .admin-form textarea, .admin-form select {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* --- Buttons --- */
+.btn-submit, .btn-edit, .btn-delete, .btn-cancel {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  color: black;
+  transition: var(--transition);
+}
+
+.btn-submit { background-color: var(--primary-color); }
+.btn-submit:hover { background-color: var(--secondary-color); }
+
+.btn-edit { background-color: #2196F3; margin-right: 8px; }
+.btn-edit:hover { background-color: #1976D2; }
+
+.btn-delete { background-color: var(--error-color); }
+.btn-delete:hover { background-color: #B71C1C; }
+
+.btn-cancel { background-color: #9E9E9E; }
+.btn-cancel:hover { background-color: #757575; }
+
+/* --- Messages --- */
+.admin-message {
+  padding: 12px;
+  background-color: #E8F5E9;
+  color: #2E7D32;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}

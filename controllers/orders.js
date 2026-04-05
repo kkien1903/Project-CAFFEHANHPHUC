@@ -1,10 +1,40 @@
 let orderModel = require('../schemas/orders');
 const productModel = require('../schemas/products');
 const cartModel = require('../schemas/cart');
+const paymentModel = require('../schemas/payments');
 const inventoryController = require('./inventories');
 const mongoose = require('mongoose');
 
 module.exports = {
+    // Hàm tạo đơn hàng chuẩn: Luôn luôn tạo mới (không bao giờ ghi đè đơn cũ)
+    CreateOrder: async function (orderData) {
+        const newOrder = new orderModel(orderData);
+        const savedOrder = await newOrder.save();
+
+        // Tự động sinh Payment liên kết chờ thanh toán
+        const newPayment = new paymentModel({
+            user: orderData.user,
+            order: savedOrder._id,
+            method: orderData.paymentMethod ? orderData.paymentMethod.toLowerCase() : 'cod',
+            amount: orderData.totalAmount,
+            status: 'pending'
+        });
+        await newPayment.save();
+
+        // Trừ số lượng tồn kho và tăng lượt bán
+        if (orderData.items && orderData.items.length > 0) {
+            for (const item of orderData.items) {
+                try {
+                    await inventoryController.DecreaseStock(item.product, item.quantity);
+                } catch (err) {
+                    console.error("Không thể trừ tồn kho:", err.message);
+                }
+            }
+        }
+
+        return savedOrder;
+    },
+
     GetAllOrders: async function () {
         return await orderModel.find({ isDeleted: false })
             .populate('user', 'username email')
@@ -67,6 +97,16 @@ module.exports = {
                 paymentMethod
             });
             const savedOrder = await newOrder.save();
+
+            // 5.1 Tạo bản ghi thanh toán tương ứng cho đơn hàng
+            const newPayment = new paymentModel({
+                user: userId,
+                order: savedOrder._id,
+                method: paymentMethod ? paymentMethod.toLowerCase() : 'cod', // Chuyển COD -> cod, BANK_TRANSFER -> bank_transfer
+                amount: totalAmount,
+                status: 'pending'
+            });
+            await newPayment.save();
 
             // 6. Giảm số lượng tồn kho (sau khi đã chắc chắn tạo được đơn hàng)
             // Lưu ý: Nếu bước này thất bại, đơn hàng đã được tạo nhưng tồn kho chưa bị trừ.
