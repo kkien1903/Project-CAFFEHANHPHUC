@@ -20,4 +20,27 @@
     "$date": "2026-04-05T09:29:49.821Z"
   },
   "__v": 0
+},
+{
+  "_id": {
+    "$oid": "69d2702cece83bb5c3283ad5"
+  },
+  "username": "MinhDat",
+  "password": "$2b$10$1UU8967GgY2QLFxcGiCm4eZ26y8nIPjj4x2TBEWV2ew46DpxAZEki",
+  "email": "minhdat.it.work@gmail.com",
+  "fullName": "",
+  "avatarUrl": "https://i.sstatic.net/l60Hf.png",
+  "status": false,
+  "role": {
+    "$oid": "69d0b34f342778d3aa37346e"
+  },
+  "loginCount": 0,
+  "isDeleted": false,
+  "createdAt": {
+    "$date": "2026-04-05T14:22:36.043Z"
+  },
+  "updatedAt": {
+    "$date": "2026-04-05T14:22:36.043Z"
+  },
+  "__v": 0
 }]

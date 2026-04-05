@@ -4,7 +4,11 @@ import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
 import CategoriesPage from './pages/CategoriesPage';
 import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import OrderHistoryPage from './pages/OrderHistoryPage';
+import ReservationsPage from './pages/ReservationsPage';
 import LoginPage from './pages/LoginPage';
+import PromotionPage from './pages/PromotionPage';
 import RegisterPage from './pages/RegisterPage';
 import ProductDetailPage from './pages/ProductDetailPage'; // Import trang chi tiết sản phẩm
 import AdminRoute from './contexts/AdminRoute';
@@ -20,6 +24,10 @@ function App() {
         <Route path="/products/:id" element={<ProductDetailPage />} /> {/* Route cho chi tiết sản phẩm */}
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/orders" element={<OrderHistoryPage />} />
+        <Route path="/promotion" element={<PromotionPage />} />
+        <Route path="/reservations" element={<ReservationsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         

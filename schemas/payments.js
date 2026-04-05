@@ -11,7 +11,11 @@ const paymentSchema = new mongoose.Schema(
     reservation: {
       type: mongoose.Types.ObjectId,
       ref: "reservation",
-      required: true
+    },
+
+    order: {
+      type: mongoose.Types.ObjectId,
+      ref: "order",
     },
 
     method: {

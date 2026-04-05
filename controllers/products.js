@@ -34,7 +34,10 @@ module.exports = {
     GetProductById: async function (id) {
         return await productModel.findOne({ _id: id, isDeleted: false }).populate('category');
     },
-    CreateProduct: async function (productData, stock) {
+    CreateProduct: async function (productData) {
+        const stock = productData.stock || 0;
+        delete productData.stock;
+
         const productToSave = {
             ...productData,
             slug: slugify(productData.title, {
@@ -62,6 +65,10 @@ module.exports = {
                 locale: 'vi',
                 trim: true
             });
+        }
+        if (productData.stock !== undefined) {
+            await inventoryModel.findOneAndUpdate({ product: id }, { stock: productData.stock }, { upsert: true });
+            delete productData.stock;
         }
         return await productModel.findByIdAndUpdate(id, productData, { new: true, runValidators: true });
     },

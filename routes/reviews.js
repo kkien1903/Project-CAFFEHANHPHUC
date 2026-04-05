@@ -1,78 +1,86 @@
 var express = require('express');
 var router = express.Router();
 let reviewController = require('../controllers/reviews');
-let { checkLogin, checkRole } = require('../utils/authHandler.js');
+let reviewModel = require('../schemas/reviews');
+let { checkLogin } = require('../utils/authHandler.js');
 
 /* GET reviews listing. */
 router.get('/', async function (req, res, next) {
   try {
-    // Can be public, or add checkLogin if only logged-in users can see reviews
-    let reviews = await reviewController.GetAllReviews();
+    let filter = { isDeleted: false };
+    // Lọc theo sản phẩm nếu có truyền lên productId
+    if (req.query.product) {
+      filter.product = req.query.product;
+    }
+    let reviews = await reviewModel.find(filter)
+      .populate('product', 'title')
+      .populate('user', 'username')
+      .sort({ createdAt: -1 }); // Sắp xếp đánh giá mới nhất lên đầu
     res.send(reviews);
   } catch (error) {
-    next(error);
+    res.status(500).send({ message: error.message });
   }
 });
 
-router.get('/:id', async function (req, res, next) { // Can be public
+router.get('/:id', async function (req, res, next) {
   try {
-    let result = await reviewController.GetReviewById(req.params.id);
-    if (result) {
+    let result = await reviewModel.find({ _id: req.params.id, isDeleted: false });
+    if (result.length > 0) {
       res.send(result);
     } else {
       res.status(404).send({ message: "id not found" });
     }
   } catch (error) {
-    next(error);
+    res.status(404).send({ message: "id not found" });
   }
 });
 
 router.post('/', checkLogin, async function (req, res, next) {
   try {
     let newItem = await reviewController.CreateReview({
-      ...req.body,
+      product: req.body.product,
       user: req.userId, // Automatically assign logged in user
+      rating: req.body.rating,
+      comment: req.body.comment
     });
     res.status(201).send(newItem);
   } catch (err) {
-    next(err);
+    res.status(400).send({ message: err.message });
   }
 });
 
 router.put('/:id', checkLogin, async function (req, res, next) {
   try {
-    const reviewId = req.params.id;
-    const review = await reviewController.GetReviewById(reviewId);
+    // Add logic to ensure only the user who wrote the review or an admin can update it
+    let id = req.params.id;
+    let updatedItem = await reviewModel.findById(id);
+    if (!updatedItem) return res.status(404).send({ message: "id not found" });
 
-    if (!review) {
-      return res.status(404).send({ message: "Review not found" });
+    for (const key of Object.keys(req.body)) {
+      updatedItem[key] = req.body[key];
     }
+    await updatedItem.save();
 
-    // Ensure only the user who wrote the review or an admin can update it
-    if (review.user._id.toString() !== req.userId && req.userRole !== 'ADMIN') {
-      return res.status(403).send({ message: "Bạn không có quyền cập nhật review này." });
-    }
-
-    // Prevent user from changing the product or user associated with the review
-    const { product, user, ...updateData } = req.body;
-
-    const updatedReview = await reviewController.UpdateReview(reviewId, updateData);
-    res.send(updatedReview);
+    res.send(updatedItem);
   } catch (err) {
-    next(err);
+    res.status(400).send({ message: err.message });
   }
 });
 
-router.delete('/:id', checkLogin, checkRole("ADMIN"), async function (req, res, next) {
+router.delete('/:id', async function (req, res, next) {
   try {
-    // Only admins can soft-delete reviews
-    let updatedItem = await reviewController.DeleteReview(req.params.id);
+    // Add logic to ensure only admin can delete
+    let updatedItem = await reviewModel.findByIdAndUpdate(
+      req.params.id,
+      { isDeleted: true },
+      { new: true }
+    );
     if (!updatedItem) {
       return res.status(404).send({ message: "id not found" });
     }
     res.send(updatedItem);
   } catch (err) {
-    next(err);
+    res.status(400).send({ message: err.message });
   }
 });
 module.exports = router;
