@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext'; // Import useAuth
+import { Link, NavLink } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext'; // Import useAuth
 
 const Header = () => {
   const { isAuthenticated, user, logout } = useAuth(); // Lấy trạng thái và hàm từ context
@@ -11,10 +11,10 @@ const Header = () => {
         <Link to="/" className="logo">CÀ PHÊ HẠNH PHÚC</Link>
         <nav className="main-nav">
           <ul>
-            <li><Link to="/">Trang chủ</Link></li>
-            <li><Link to="/products">Sản phẩm</Link></li>
-            <li><Link to="/categories">Danh mục</Link></li>
-            {isAuthenticated && <li><Link to="/cart">Giỏ hàng</Link></li>}
+            <li><NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>Trang chủ</NavLink></li>
+            <li><NavLink to="/products" className={({ isActive }) => isActive ? "active" : ""}>Sản phẩm</NavLink></li>
+            <li><NavLink to="/categories" className={({ isActive }) => isActive ? "active" : ""}>Danh mục</NavLink></li>
+            {isAuthenticated && <li><NavLink to="/cart" className={({ isActive }) => isActive ? "active" : ""}>Giỏ hàng</NavLink></li>}
             
             {isAuthenticated ? (
               <>
@@ -23,8 +23,8 @@ const Header = () => {
               </>
             ) : (
               <>
-                <li><Link to="/login">Đăng nhập</Link></li>
-                <li><Link to="/register">Đăng ký</Link></li>
+                <li><NavLink to="/login" className={({ isActive }) => isActive ? "active" : ""}>Đăng nhập</NavLink></li>
+                <li><NavLink to="/register" className={({ isActive }) => isActive ? "active" : ""}>Đăng ký</NavLink></li>
               </>
             )}
           </ul>
