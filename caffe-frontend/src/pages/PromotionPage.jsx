@@ -6,8 +6,8 @@ const PromotionPage = () => {
   const highlights = [
     {
       id: 1,
-      title: '100% Cà Phê Arabica',
-      desc: 'Chúng tôi tự hào sử dụng 100% hạt cà phê Arabica thượng hạng, được thu hoạch thủ công từ những vùng trồng danh tiếng, mang lại hương vị đậm đà và hương thơm quyến rũ khó quên.',
+      title: '100% Cà Phê',
+      desc: 'Chúng tôi tự hào sử dụng 100% hạt cà phê thượng hạng, được thu hoạch thủ công từ những vùng trồng danh tiếng, mang lại hương vị đậm đà và hương thơm quyến rũ khó quên.',
       icon: '☕',
       color: '#d62828'
     },

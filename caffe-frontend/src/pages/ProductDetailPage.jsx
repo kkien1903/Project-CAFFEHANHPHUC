@@ -14,6 +14,7 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState(null);
   const [notification, setNotification] = useState('');
+  const [stock, setStock] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
@@ -37,14 +38,19 @@ const ProductDetailPage = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchProductAndInventory = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/products/${id}`);
-        // Lấy dữ liệu linh hoạt giống như các trang khác
-        const productData = response.data?.data || response.data;
+        // Tải song song thông tin sản phẩm và tồn kho
+        const [productRes, inventoryRes] = await Promise.all([
+          api.get(`/products/${id}`),
+          api.get(`/inventories/${id}`).catch(() => ({ data: { stock: 0 } })) // Nếu lỗi, mặc định tồn kho là 0
+        ]);
+
+        const productData = productRes.data?.data || productRes.data;
         setProduct(productData);
-        // Tự động chọn size đầu tiên nếu có
+        setStock(inventoryRes.data.stock ?? 0);
+
         if (productData.sizeOptions && productData.sizeOptions.length > 0) {
           setSelectedSize(productData.sizeOptions[0]);
         }
@@ -65,17 +71,33 @@ const ProductDetailPage = () => {
       }
     };
 
-    fetchProduct();
+    fetchProductAndInventory();
     fetchReviews();
   }, [id]);
 
   const handleQuantityChange = (amount) => {
-    setQuantity((prev) => Math.max(1, prev + amount));
+    const newQuantity = quantity + amount;
+
+    if (newQuantity < 1) {
+      return; // Không cho số lượng nhỏ hơn 1
+    }
+
+    if (stock !== null && newQuantity > stock) {
+      setNotification(`Chỉ còn lại ${stock} sản phẩm trong kho.`);
+      setTimeout(() => setNotification(''), 3000);
+      return; // Không cho vượt quá tồn kho
+    }
+    setQuantity(newQuantity);
   };
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
       navigate('/login'); // Chuyển hướng đến trang đăng nhập nếu chưa xác thực
+      return;
+    }
+
+    if (quantity > stock) {
+      setNotification(`Số lượng bạn chọn (${quantity}) vượt quá số lượng tồn kho (${stock}).`);
       return;
     }
 
@@ -97,7 +119,7 @@ const ProductDetailPage = () => {
       setTimeout(() => setNotification(''), 3000); // Xóa thông báo sau 3 giây
       window.dispatchEvent(new Event('cartUpdated')); // Báo hiệu thay đổi giỏ hàng
     } catch (err) {
-      setNotification('Thêm vào giỏ hàng thất bại. Vui lòng thử lại.');
+      setNotification(err.response?.data?.message || 'Thêm vào giỏ hàng thất bại. Vui lòng thử lại.');
       console.error('Lỗi thêm vào giỏ hàng:', err);
       setTimeout(() => setNotification(''), 3000);
     }
@@ -155,6 +177,7 @@ const ProductDetailPage = () => {
         <div className="product-detail-info" style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <h1 style={{ fontSize: '2.5rem', color: '#006a31', marginBottom: '15px', marginTop: 0 }}>{product.title}</h1>
           <p className="price" style={{ fontSize: '2rem', color: '#e63946', fontWeight: 'bold', margin: '0 0 20px 0' }}>{getPriceBySize(product.price, selectedSize, product.sizeOptions).toLocaleString()} VNĐ</p>
+          
           <p className="description" style={{ fontSize: '1.1rem', color: '#555', lineHeight: '1.7', marginBottom: '30px' }}>{product.description || 'Chưa có mô tả cho sản phẩm này.'}</p>
 
           {/* Lựa chọn Size */}
@@ -185,19 +208,94 @@ const ProductDetailPage = () => {
             </div>
           )}
 
-          {/* Lựa chọn Số lượng */}
-          <div className="quantity-selector" style={{ marginBottom: '35px' }}>
-            <p className="selector-label" style={{ fontWeight: 'bold', marginBottom: '12px', color: '#333', fontSize: '1.1rem' }}>Số lượng:</p>
-            <div className="quantity-controls" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <button onClick={() => handleQuantityChange(-1)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: '1px solid #ddd', background: '#f9f9f9', fontSize: '1.4rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }}>-</button>
-              <input type="text" value={quantity} readOnly style={{ width: '60px', textAlign: 'center', border: 'none', fontSize: '1.3rem', fontWeight: 'bold', color: '#006a31', background: 'transparent' }} />
-              <button onClick={() => handleQuantityChange(1)} style={{ width: '45px', height: '45px', borderRadius: '50%', border: '1px solid #ddd', background: '#f9f9f9', fontSize: '1.4rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'background 0.2s' }}>+</button>
+          {/* Lựa chọn Số lượng (chỉ hiển thị nếu còn hàng) */}
+          {stock > 0 && (
+            <div className="quantity-selector" style={{ marginBottom: '35px' }}>
+              <p className="selector-label" style={{ 
+                fontWeight: 'bold', 
+                marginBottom: '15px', 
+                color: '#333', 
+                fontSize: '1.1rem' 
+              }}>Số lượng:</p>
+              
+              <div className="quantity-controls" style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0', // Để sát nhau tạo thành một khối
+                border: '1px solid #ddd',
+                borderRadius: '30px',
+                width: 'fit-content',
+                overflow: 'hidden',
+                background: '#fff'
+              }}>
+                <button 
+                  onClick={() => handleQuantityChange(-1)} 
+                  style={{ 
+                    width: '45px', 
+                    height: '45px', 
+                    border: 'none',
+                    background: '#f8f9fa', 
+                    fontSize: '1.5rem', 
+                    cursor: 'pointer', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    transition: 'all 0.2s',
+                    color: '#555',
+                    borderRight: '1px solid #ddd'
+                  }}
+                  onMouseOver={(e) => e.target.style.background = '#e9ecef'}
+                  onMouseOut={(e) => e.target.style.background = '#f8f9fa'}
+                >
+                  −
+                </button>
+                
+                <input 
+                  type="text" 
+                  value={quantity} 
+                  readOnly 
+                  style={{ 
+                    width: '50px', 
+                    textAlign: 'center', 
+                    border: 'none', 
+                    fontSize: '1.2rem', 
+                    fontWeight: 'bold', 
+                    color: '#006a31', 
+                    background: 'transparent',
+                    outline: 'none'
+                  }} 
+                />
+                
+                <button 
+                  onClick={() => handleQuantityChange(1)} 
+                  style={{ 
+                    width: '45px', 
+                    height: '45px', 
+                    border: 'none',
+                    background: '#f8f9fa', 
+                    fontSize: '1.5rem', 
+                    cursor: 'pointer', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    transition: 'all 0.2s',
+                    color: '#555',
+                    borderLeft: '1px solid #ddd'
+                  }}
+                  onMouseOver={(e) => e.target.style.background = '#e9ecef'}
+                  onMouseOut={(e) => e.target.style.background = '#f8f9fa'}
+                >
+                  +
+                </button>
+              </div>
             </div>
-          </div>
+          )}
 
-          <button className="add-to-cart-btn" onClick={handleAddToCart} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '10px', background: '#e63946', color: '#fff', border: 'none', padding: '16px 35px', borderRadius: '30px', fontSize: '1.2rem', fontWeight: 'bold', cursor: 'pointer', transition: 'transform 0.2s, boxShadow 0.2s', boxShadow: '0 4px 15px rgba(230, 57, 70, 0.3)', width: '100%', maxWidth: '350px' }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
-            Thêm vào giỏ hàng
+          <button className="add-to-cart-btn" onClick={handleAddToCart} disabled={stock === 0} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '10px', background: stock === 0 ? '#ccc' : '#e63946', color: '#fff', border: 'none', padding: '16px 35px', borderRadius: '30px', fontSize: '1.2rem', fontWeight: 'bold', cursor: stock === 0 ? 'not-allowed' : 'pointer', transition: 'all 0.2s', boxShadow: stock === 0 ? 'none' : '0 4px 15px rgba(230, 57, 70, 0.3)', width: '100%', maxWidth: '350px' }}>
+            {stock > 0 ? (
+              <><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"><path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/></svg>
+              Thêm vào giỏ hàng</>
+            ) : 'Hết hàng'}
           </button>
 
           {notification && <p className="cart-notification" style={{ marginTop: '20px', color: '#006a31', fontWeight: 'bold', background: '#e6f4ea', padding: '12px 20px', borderRadius: '8px', display: 'inline-block' }}>✅ {notification}</p>}

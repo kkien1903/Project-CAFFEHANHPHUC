@@ -48,6 +48,7 @@ const AdminOrders = () => {
             <tr>
               <th>Mã ĐH</th>
               <th>Khách hàng</th>
+              <th>Chi tiết đơn hàng</th>
               <th>Ngày đặt</th>
               <th>Tổng tiền</th>
               <th>Trạng thái</th>
@@ -62,6 +63,15 @@ const AdminOrders = () => {
                   <div style={{ fontSize: '0.9rem', color: '#555' }}>{order.phone || order.user?.email || ''}</div>
                   <div style={{ fontSize: '0.85rem', color: '#777' }}>{order.shippingAddress}</div>
                   {order.note && <div style={{ fontSize: '0.85rem', color: '#d62828', fontStyle: 'italic', marginTop: '4px' }}>*Ghi chú: {order.note}</div>}
+                </td>
+                <td>
+                  <ul style={{ margin: 0, padding: '0 0 0 15px', listStyle: 'square' }}>
+                    {order.items && order.items.map((item, index) => (
+                      <li key={index} style={{ fontSize: '0.9rem', color: '#333' }}>
+                        {item.quantity} x {item.product?.title || 'Sản phẩm đã bị xóa'} {item.size ? `(Size: ${item.size})` : ''}
+                      </li>
+                    ))}
+                  </ul>
                 </td>
                 <td>{new Date(order.createdAt).toLocaleDateString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</td>
                 <td style={{ fontWeight: 'bold', color: '#e63946' }}>{order.totalAmount?.toLocaleString()} đ</td>
@@ -89,7 +99,7 @@ const AdminOrders = () => {
               </tr>
             )) : (
               <tr>
-                <td colSpan="5" style={{ textAlign: 'center', padding: '30px' }}>Chưa có đơn hàng nào.</td>
+                <td colSpan="6" style={{ textAlign: 'center', padding: '30px' }}>Chưa có đơn hàng nào.</td>
               </tr>
             )}
           </tbody>

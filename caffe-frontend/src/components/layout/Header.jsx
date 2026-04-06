@@ -169,7 +169,7 @@ const Header = () => {
           onMouseEnter={() => setShowCategories(true)}
           onMouseLeave={() => setShowCategories(false)}
         >
-          <NavLink to="/categories" style={navLinkStyle}>Danh mục</NavLink>
+          <span style={{ ...navLinkStyle({ isActive: false }), cursor: 'pointer' }}>Danh mục</span>
           {showCategories && categories.length > 0 && (
             <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', paddingTop: '15px', zIndex: 1000, width: '220px' }}>
               <div style={{ backgroundColor: '#fff', boxShadow: '0 4px 20px rgba(0,0,0,0.1)', borderRadius: '8px', overflow: 'hidden' }}>

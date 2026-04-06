@@ -46,6 +46,15 @@
   border-radius: var(--border-radius);
   box-shadow: var(--box-shadow);
 }
+.admin-content h2{
+  color: #000000 !important;
+  font-weight: bold;
+  margin-bottom: 20px;
+  font-size: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
 
 /* --- Admin Tables --- */
 .admin-table {
