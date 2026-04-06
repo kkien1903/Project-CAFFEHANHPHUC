@@ -10,7 +10,7 @@ const Footer = () => {
         <div>
           <h3 style={{ fontSize: '1.5rem', fontWeight: '800', textTransform: 'uppercase', marginBottom: '20px', letterSpacing: '1px' }}>Cà Phê Hạnh Phúc</h3>
           <p style={{ lineHeight: '1.6', fontSize: '0.95rem', color: '#e0e0e0' }}>
-            Hương vị của sự bình yên và hạnh phúc. Chúng tôi mang đến những hạt cà phê Arabica thượng hạng, được rang xay tỉ mỉ để trao gửi trọn vẹn yêu thương trong từng tách cà phê.
+            Hương vị của sự bình yên và hạnh phúc. Chúng tôi mang đến những hạt cà phê thượng hạng, được rang xay tỉ mỉ để trao gửi trọn vẹn yêu thương trong từng tách cà phê.
           </p>
         </div>
 
@@ -21,7 +21,7 @@ const Footer = () => {
             <li><Link to="/" style={{ color: '#e0e0e0', textDecoration: 'none' }}>Trang chủ</Link></li>
             <li><Link to="/products" style={{ color: '#e0e0e0', textDecoration: 'none' }}>Menu</Link></li>
             <li><Link to="/categories" style={{ color: '#e0e0e0', textDecoration: 'none' }}>Danh mục</Link></li>
-            <li><Link to="/promotion" style={{ color: '#e0e0e0', textDecoration: 'none' }}>Khuyến mãi</Link></li>
+            <li><Link to="/promotion" style={{ color: '#e0e0e0', textDecoration: 'none' }}>Khám Phá</Link></li>
           </ul>
         </div>
 

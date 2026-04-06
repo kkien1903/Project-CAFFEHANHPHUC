@@ -30,8 +30,7 @@ router.get("/:id", checkLogin, async function (req, res, next) {
   }
 });
 
-router.post("/",  postUserValidator, validateResult,
-  async function (req, res, next) {
+router.post("/",checkLogin, checkRole("ADMIN"), postUserValidator, validateResult, async function (req, res, next) {
     try {
       let newItem = await userController.CreateAnUser({
         username: req.body.username,

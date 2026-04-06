@@ -47,10 +47,6 @@ module.exports = {
     },
     CreateOrderFromCart: async function (userId, orderInfo) {
         const { shippingAddress, paymentMethod } = orderInfo;
-        // Ghi chú: Đã loại bỏ Transaction để tương thích với môi trường MongoDB standalone.
-        // Điều này có nghĩa là nếu có lỗi xảy ra ở giữa quá trình,
-        // các thay đổi sẽ không được tự động phục hồi.
-
         try {
             // 1. Lấy giỏ hàng của người dùng
             const cart = await cartModel.findOne({ user: userId });
@@ -102,7 +98,7 @@ module.exports = {
             const newPayment = new paymentModel({
                 user: userId,
                 order: savedOrder._id,
-                method: paymentMethod ? paymentMethod.toLowerCase() : 'cod', // Chuyển COD -> cod, BANK_TRANSFER -> bank_transfer
+                method: paymentMethod ? paymentMethod.toLowerCase() : 'cod', 
                 amount: totalAmount,
                 status: 'pending'
             });

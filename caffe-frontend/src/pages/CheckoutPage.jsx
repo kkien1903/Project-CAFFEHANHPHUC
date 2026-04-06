@@ -97,7 +97,12 @@ const CheckoutPage = () => {
             <div style={{ marginBottom: '15px' }}><label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#555' }}>Số điện thoại *</label><input type="tel" name="phone" value={formData.phone} onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }} placeholder="Nhập số điện thoại liên hệ" /></div>
             <div style={{ marginBottom: '15px' }}><label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#555' }}>Địa chỉ giao hàng *</label><input type="text" name="shippingAddress" value={formData.shippingAddress} onChange={handleChange} required style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }} placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." /></div>
             <div style={{ marginBottom: '15px' }}><label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#555' }}>Ghi chú đơn hàng</label><textarea name="note" value={formData.note} onChange={handleChange} rows="3" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none', resize: 'vertical' }} placeholder="Ví dụ: Giao giờ hành chính, ít đá, nhiều đường..."></textarea></div>
-            <div style={{ marginBottom: '25px' }}><label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#555' }}>Phương thức thanh toán</label><select name="paymentMethod" value={formData.paymentMethod} onChange={handleChange} style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none', backgroundColor: '#000', color: '#fff' }}><option value="COD">Thanh toán khi nhận hàng (COD)</option><option value="BANK_TRANSFER">Chuyển khoản ngân hàng</option></select></div>
+            <div style={{ marginBottom: '25px' }}>
+              <label style={{ display: 'block', marginBottom: '8px', fontWeight: 'bold', color: '#555' }}>Phương thức thanh toán</label>
+              <div style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #ddd', backgroundColor: '#f9f9f9', color: '#333' }}>
+                Thanh toán khi nhận hàng (COD)
+              </div>
+            </div>
           </form>
         </div>
 
